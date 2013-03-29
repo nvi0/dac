@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% load url from future %} {# Prior to Django 1.5 #}
+{% block content %}
+
+<p>Welcome, {{ user.username }}.</p>
+<p><a href="{% url 'django.contrib.auth.views.logout_then_login' %}">Logout</a></p>
+
+{% endblock %}

@@ -1,5 +1,5 @@
 from django.db import models
-from django import forms
+from django.contrib.auth.models import User
 
 POSITIONS = (
         ('f', 'Faculty'),
@@ -7,23 +7,21 @@ POSITIONS = (
         ('u', 'Student'),
         )
 
-class User(models.Model):
-    uid = models.AutoField(primary_key=True)
-    fname = models.CharField(max_length=10)
-    lname = models.CharField(max_length=10)
-    admin = models.BooleanField(default=False)
+class DacUser(models.Model):
+    user = models.OneToOneField(User)
     position = models.CharField(max_length=1, choices=POSITIONS)
-    active = models.BooleanField(default=True)
+    # first_name = models.CharField(max_length=30)
+    # last_name = models.CharField(max_length=30)
     
-    class Meta:
-        unique_together = ('fname','lname',)
+    # class Meta:
+    #    unique_together = ('first_name','last_name',)
 
     def __unicode__(self):
-        return ' '.join([self.fname,self.lname])
+        return self.user.username
 
 class Asset(models.Model):
     aid = models.AutoField(primary_key=True)
-    uid = models.ForeignKey('User')
+    uid = models.ForeignKey('DacUser')
     mime_type = models.CharField(max_length=200)
     title = models.CharField(max_length=200)
     submitted = models.DateField(auto_now_add=True)
@@ -48,5 +46,4 @@ class Asset_keyword(models.Model):
         unique_together = ('aid','kid')
 
 
-class UploadFileForm(forms.Form):
-    file = forms.FileField()
+
