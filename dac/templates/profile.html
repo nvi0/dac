@@ -4,5 +4,6 @@
 
 <p>Welcome, {{ user.username }}.</p>
 <p><a href="{% url 'django.contrib.auth.views.logout_then_login' %}">Logout</a></p>
+<p><a href="{% url 'django.contrib.auth.views.password_change' %}">Change password</a></p>
 
 {% endblock %}

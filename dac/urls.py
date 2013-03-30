@@ -17,10 +17,11 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^fooview/(?P<foo_id>\d+)/$', views.fooview),
     url(r'^upload/$', views.uploadfile),
-    # url(r'^accounts/$', include('registrations.urls'))
+    # url(r'^accounts/$', include('registrations.urls')),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
     url(r'^accounts/profile/$', views.profile),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout_then_login'),
-    url(r'^accounts/password_change/$','django.contrib.auth.views.password_change'),
+    url(r'^accounts/password_change/$','django.contrib.auth.views.password_change',{'post_change_redirect':'/accounts/profile'}),
     url(r'^accounts/register/$', views.registration),
+    url(r'^testfileview$', views.fileview),
 )

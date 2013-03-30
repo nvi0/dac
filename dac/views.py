@@ -4,6 +4,7 @@ from django.core.context_processors import csrf
 from django.contrib.auth.decorators import login_required
 
 from helpers import RegistrationForm, UploadFileForm, handle_uploaded_file, handle_registration
+from models import *
 
 @login_required
 def home(request):
@@ -42,7 +43,8 @@ def registration(request):
         form = RegistrationForm(request.POST)
         # print(form.__dict__)
         if form.is_valid():
-            handle_registration(form.data)
+            handle_registration(form.cleaned_data)
+            form.clean
             return render_to_response('registration/registration_complete.html')
     else:
         form = RegistrationForm()
@@ -50,3 +52,10 @@ def registration(request):
     c = {'form': form}
     c.update(csrf(request))
     return render_to_response('registration/registration_form.html', c)
+
+def fileview(request):
+    # process restraint
+    
+    file_list = Asset.objects.all()
+    m = {'file_list': file_list}
+    return render_to_response('filestable.html', m)
