@@ -12,7 +12,8 @@ CATEGORIES = {'ti':'title','ty':'mime_type','us':'uid','ta':'kid'}
 def home(request):
     searchcat = request.GET.get('searchcat','')
     searchtext = request.GET.get('searchtext','')
-    print ' * SEARCH',searchcat,searchtext
+    if searchtext != '':
+        print ' * SEARCH',searchcat,searchtext
     # filter
     file_list = Asset.objects.all()
     form = UploadFileForm()

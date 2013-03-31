@@ -2,7 +2,9 @@ from django import forms
 from models import POSITIONS
 
 class UploadFileForm(forms.Form):
-    file = forms.FileField()
+    title = forms.CharField(required=False,label='Title',max_length=30)
+    file = forms.FileField(label='File')
+    tags = forms.CharField(required=False,label='Tags',max_length=30)
 
 class RegistrationForm(forms.Form):
     username = forms.CharField(required=True,label='Username',max_length=30)
