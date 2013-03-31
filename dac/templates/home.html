@@ -1,10 +1,56 @@
 {% extends 'base.html' %}
+{% load url from future %} {# Prior to Django 1.5 #}
+{% block page_title %}DAC Home{% endblock %}
 
-{% block page_title %}Welcome{% endblock %}
-
-{% block header_title %}IT WORKED!{% endblock %}
+{% block header_title %}DAC{% endblock %}
 
 {% block content %}
-    <p>Hello {{ user_agent }} visiting from {{ ip }}</p>
+<p>Welcome, {{ user.username }}!</p>
+<p><a href="{% url 'django.contrib.auth.views.logout_then_login' %}">Log out</a></p>
+<p><a href="{% url 'django.contrib.auth.views.password_change' %}">Change password</a></p>
+<p><a href="{% url 'dac.views.manage_file' %}">Manage Files</a></p>
+{# --- start search box --- #}
+<div id="searchbox">
+	<form method="get">
+		<select id="id_searchcat" name="searchcat">
+			<option value="ti">Title</option>
+			<option value="ty">Type</option>
+			<option value="us">Owner</option>
+			<option value="ta">Tags</option>
+		</select>
+		<input id="id_searchtext" name="searchtext" type="text">
+		<input type="submit" value="Go" />
+	</form>
+</div>
+{# --- end search box --- #}
+{# --- start files table --- #}
+<table id="fileTable" class="tablesorter">
+<thead>
+	<tr>
+		<td>Title</td>
+		<td>Type</td>
+		<td>Modified</td>
+		<td>Owner</td>
+	</tr>
+</thead>
+<tbody>
+{% for fileinfo in file_list %}
+	<tr>
+		<td>{{ fileinfo.title }}</td>
+		<td>{{ fileinfo.mime_type }}</td>
+		<td>{{ fileinfo.updated }}</td>
+		<td>{{ fileinfo.uid }}</td>
+	</tr>
+{% endfor %}
+</tbody>
+{# --- end files table --- #}
+{# --- start file upload --- #}
+<form enctype="multipart/form-data" method="post" action="/upload/">
+    {% csrf_token %}
+     <table>
+         {{form.as_table}}
+     </table>
+     <input type="submit" value="Upload" id="Save"/>
+</form>
+{# --- end file upload --- #}
 {% endblock %}
-

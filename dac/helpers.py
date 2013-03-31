@@ -9,6 +9,7 @@ class RegistrationForm(forms.Form):
     password = forms.CharField(required=True,label='Password',max_length=30,min_length=6)
     first_name = forms.CharField(required=True,label='First name',max_length=30)
     last_name = forms.CharField(required=True,label='Last name',max_length=30)
+    email = forms.EmailField(required=True,label='Email')
     position = forms.ChoiceField(POSITIONS)
 
 def handle_uploaded_file(file):

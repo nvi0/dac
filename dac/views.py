@@ -6,14 +6,19 @@ from django.contrib.auth.decorators import login_required
 from helpers import RegistrationForm, UploadFileForm, handle_uploaded_file, handle_registration
 from models import *
 
+CATEGORIES = {'ti':'title','ty':'mime_type','us':'uid','ta':'kid'}
+
 @login_required
 def home(request):
-    user_agent = request.META.get("HTTP_USER_AGENT", None)
-    ip = request.META.get('REMOTE_ADDR', None)
-    return render(request, 'home.html', {
-        'user_agent': user_agent,
-        'ip': ip,
-    })
+    searchcat = request.GET.get('searchcat','')
+    searchtext = request.GET.get('searchtext','')
+    print ' * SEARCH',searchcat,searchtext
+    # filter
+    file_list = Asset.objects.all()
+    form = UploadFileForm()
+    m = {'file_list': file_list, 'form': form}
+    m.update(csrf(request))
+    return render(request,'home.html', m)
 
 def fooview(request, foo_id):
     return HttpResponse('from fooview. %s' % foo_id)
@@ -24,18 +29,13 @@ def uploadfile(request):
         # a = request.POST
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
+            print ' * Uploading file:',request.FILES['file']
             handle_uploaded_file(request.FILES['file'])
-            return HttpResponseRedirect('/')
-    else:
-        form = UploadFileForm()
-
-    c = {'form': form}
-    c.update(csrf(request))
-    return render_to_response('uploadfile.html', c)
+    return HttpResponseRedirect('/')
 
 @login_required
-def profile(request):
-    return render(request, 'profile.html')
+def manage_file(request):
+    return render(request, 'manage_file.html')
     
 def registration(request):
     if request.method == 'POST':

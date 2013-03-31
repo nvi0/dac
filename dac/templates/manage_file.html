@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load url from future %} {# Prior to Django 1.5 #}
+{% block page_title %}DAC File Manager{% endblock %}
+
+{% block content %}
+
+<p>Welcome, {{ user.username }}.</p>
+
+
+{% endblock %}
