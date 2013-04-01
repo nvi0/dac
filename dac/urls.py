@@ -7,9 +7,6 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', views.home),
-    # Examples:
-    # url(r'^$', 'example.views.home', name='home'),
-    # url(r'^example/', include('example.foo.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^viewfiles/', include('dac.uploader.urls')),

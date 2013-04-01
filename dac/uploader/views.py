@@ -19,7 +19,7 @@ def index(request):
     form = UploadFileForm()
     m = {'file_list': file_list, 'form': form}
     m.update(csrf(request))
-    return render(request,'home.html', m)
+    return render(request,'uploader/index.html', m)
 
 def fooview(request, foo_id):
     return HttpResponse('from fooview. %s' % foo_id)
@@ -36,11 +36,11 @@ def uploadfile(request):
 
 @login_required
 def manage_file(request):
-    return render(request, 'manage_file.html')
+    return render(request, 'uploader/manage_file.html')
     
 def fileview(request):
     # process restraint
     
     file_list = Asset.objects.all()
     m = {'file_list': file_list}
-    return render_to_response('filestable.html', m)
+    return render_to_response('uploader/filestable.html', m)

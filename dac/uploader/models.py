@@ -25,6 +25,8 @@ class Asset(models.Model):
 
     def __unicode__(self):
         return self.title
+    def str_keywords(self):
+        return ', '.join(keyword.text for keyword in self.keywords.all())
 
 class Keyword(models.Model):
     kid = models.AutoField(primary_key=True)
