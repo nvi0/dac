@@ -113,7 +113,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     # 'django.contrib.admindocs',
-    'dac',
+    'dac.uploader',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -144,9 +144,7 @@ LOGGING = {
         },
     }
 }
-LOGIN_REDIRECT_URL = '/'
-ACCOUNT_ACTIVATION_DAYS = 2
-EMAIL_HOST = 'localhost'
-DEFAULT_FROM_EMAIL = 'webmaster@localhost'
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/viewfiles/'
 
 from local_settings import *

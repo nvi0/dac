@@ -10,11 +10,6 @@ POSITIONS = (
 class DacUser(models.Model):
     user = models.OneToOneField(User)
     position = models.CharField(max_length=1, choices=POSITIONS)
-    # first_name = models.CharField(max_length=30)
-    # last_name = models.CharField(max_length=30)
-    
-    # class Meta:
-    #    unique_together = ('first_name','last_name',)
 
     def __unicode__(self):
         return self.user.username

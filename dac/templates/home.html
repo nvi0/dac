@@ -7,8 +7,7 @@
 {% block content %}
 <p>Welcome, {{ user.username }}!</p>
 <p><a href="{% url 'django.contrib.auth.views.logout_then_login' %}">Log out</a></p>
-<p><a href="{% url 'django.contrib.auth.views.password_change' %}">Change password</a></p>
-<p><a href="{% url 'dac.views.manage_file' %}">Manage Files</a></p>
+<p><a href="{% url 'dac.uploader.views.manage_file' %}">Manage Files</a></p>
 {# --- start search box --- #}
 <div id="searchbox">
 	<form method="get">
