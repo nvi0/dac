@@ -21,6 +21,7 @@ class Asset(models.Model):
     title = models.CharField(max_length=200)
     submitted = models.DateField(auto_now_add=True)
     updated = models.DateField(auto_now=True)
+    keywords = models.ManyToManyField('Keyword')
 
     def __unicode__(self):
         return self.title
@@ -28,17 +29,7 @@ class Asset(models.Model):
 class Keyword(models.Model):
     kid = models.AutoField(primary_key=True)
     text = models.CharField(max_length=100,unique=True)
-#    assets = models.ManyToManyField('Asset')
 
     def __unicode__(self):
         return self.text
-
-class Asset_keyword(models.Model):
-    aid = models.ForeignKey('Asset')
-    kid = models.ForeignKey('Keyword')
-
-    class Meta:
-        unique_together = ('aid','kid')
-
-
 
