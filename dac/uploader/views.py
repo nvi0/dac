@@ -6,16 +6,14 @@ from django.contrib.auth.decorators import login_required
 from forms import UploadFileForm, handle_uploaded_file
 from models import *
 
-CATEGORIES = {'ti':'title','ty':'mime_type','us':'uid','ta':'kid'}
-
 @login_required
 def index(request):
     searchcat = request.GET.get('searchcat','')
     searchtext = request.GET.get('searchtext','')
     if searchtext != '':
         print ' * SEARCH',searchcat,searchtext
-    # filter
-    file_list = Asset.objects.all()
+    
+    file_list = Asset.objects.get_search_result(searchcat,searchtext)
     form = UploadFileForm()
     m = {'file_list': file_list, 'form': form}
     m.update(csrf(request))
