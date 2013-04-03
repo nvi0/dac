@@ -1,0 +1,21 @@
+<table id="fileTable" class="tablesorter">
+<thead>
+	<tr>
+		<td>Title</td>
+		<td>Type</td>
+		<td>Modified</td>
+		<td>Owner</td>
+		<td>Tags</td>
+	</tr>
+</thead>
+<tbody>
+{% for fileinfo in file_list %}
+	<tr>
+		<td>{{ fileinfo.title }}</td>
+		<td>{{ fileinfo.mime_type }}</td>
+		<td>{{ fileinfo.updated }}</td>
+		<td>{{ fileinfo.uid }}</td>
+		<td>{{ fileinfo.str_keywords }}</td>
+	</tr>
+{% endfor %}
+</tbody>

@@ -29,7 +29,10 @@ class AssetManager(models.Manager):
             for searchkeyword in searchkeywords:
                 result.update(searchkeyword.asset_set.all())
             return list(result)
-        
+        else:
+            return super(AssetManager, self).get_query_set()
+    def get_by_user(self,username):
+        return super(AssetManager, self).get_query_set().filter(uid__user__username__iexact=username)
 
 class Asset(models.Model):
     objects = AssetManager()
