@@ -31,6 +31,7 @@ class AssetManager(models.Manager):
             return list(result)
         else:
             return super(AssetManager, self).get_query_set()
+    
     def get_by_user(self,username):
         return super(AssetManager, self).get_query_set().filter(uid__user__username__iexact=username)
 
@@ -49,7 +50,23 @@ class Asset(models.Model):
         return self.title
     def str_keywords(self):
         return ', '.join(keyword.text for keyword in self.keywords.all())
-
+    def populate(self, username, info):
+        self.title = info['title'] if info['title']!='' else info['file'].name
+        self.mime_type = info['file'].content_type
+        self.uid = DacUser.objects.get(user__username=username)
+        self.save()
+        # get/set tags
+        delim = ',' if ',' in info['tags'] else None # split by either space or comma
+        tags = [tag.strip() for tag in info['tags'].split(delim)]
+        for tag in tags:
+            keyword = Keyword.objects.filter(text=tag)
+            if keyword:
+                self.keywords.add(keyword[0])
+            else:
+                keyword = Keyword()
+                keyword.text = tag
+                keyword.save()
+                self.keywords.add(keyword)
     
         
 class Keyword(models.Model):
