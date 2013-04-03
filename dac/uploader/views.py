@@ -1,3 +1,4 @@
+import logging
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 from django.core.context_processors import csrf
@@ -5,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 
 from forms import UploadFileForm
 from models import *
+
+logger = logging.getLogger(__name__)
 
 @login_required
 def index(request):
