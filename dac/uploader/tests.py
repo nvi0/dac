@@ -37,10 +37,27 @@ class ModelsTest(TestCase):
         kw2.save()
         asset2.keywords.add(kw2)
         asset3.keywords.add(kw2)
+        # user1: asset1, asset2
+        # user2: asset3
+        # asset1: no kw
+        # asset2: kw1, kw2
+        # asset3: kw2
         
         
-    def test_basic_addition(self):
+    def test_stored_data(self):
         self.assertEqual(DacUser.objects.filter(user__username='f1')[0].user.email,'f1@abc.com')
         self.assertEqual(Asset.objects.get_by_user('f2')[0].uid.user.email,'f2@abc.com')
         self.assertEqual(Asset.objects.get_by_user('f1').filter(title='asset2')[0].keywords.filter(text='tag2')[0].text,'tag2')
         self.assertTrue('tag2' in Asset.objects.get_search_result('ti','3')[0].str_keywords())
+        self.assertQuerysetEqual(Asset.objects.filter(title__icontains='asset'),['<Asset: asset1>','<Asset: asset2>','<Asset: asset3>'],ordered=False)
+        self.assertEqual(Asset.objects.get(title__icontains='3').str_filename(),'asset3.png')
+    
+    def test_delete(self):
+        #user1 = DacUser.objects.get(pk=1)
+        #user1.delete()
+        asset2 = Asset.objects.get(pk=2)
+        asset2.delete()
+        self.assertQuerysetEqual(Asset.objects.all(),['<Asset: asset1>','<Asset: asset3>'],ordered=False)
+        self.assertQuerysetEqual(Asset.objects.get_by_user('f1'),['<Asset: asset1>'])
+        self.assertFalse(Keyword.objects.get(pk=1).asset_set.all())
+        

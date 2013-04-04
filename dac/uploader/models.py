@@ -60,6 +60,7 @@ class Asset(models.Model):
         return ', '.join(keyword.text for keyword in self.keywords.all())
 
     def populate(self, username, info):
+        # TODO: str_filename existed
         self.title = info['title'] if info[
             'title'] != '' else info['file'].name
         self.mime_type = info['file'].content_type
@@ -69,8 +70,7 @@ class Asset(models.Model):
         #   3. full mime_type
         ori_type = info['file'].name[info['file'].name.rfind('.')+1:]
         guess_type = mimetypes.guess_extension(self.mime_type)
-        self.nice_type = ori_type if len(ori_type) <= 4 else guess_type[
-            1:] if guess_type else self.mime_type
+        self.nice_type = ori_type if len(ori_type) <= 4 else guess_type[1:] if guess_type else self.mime_type
 
         self.uid = DacUser.objects.get(user__username=username)
         self.save()
@@ -88,6 +88,10 @@ class Asset(models.Model):
                 keyword.save()
                 self.keywords.add(keyword)
 
+    def str_filename(self):
+        # to be given to file to be downloaded
+        # <title.replace(' ','_')>.<nice_type>
+        return '.'.join([self.title.replace(' ','_'),self.nice_type])
 
 class Keyword(models.Model):
     kid = models.AutoField(primary_key=True)
