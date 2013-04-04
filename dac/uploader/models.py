@@ -38,6 +38,8 @@ class AssetManager(models.Manager):
     def get_by_user(self, username):
         return super(AssetManager, self).get_query_set().filter(uid__user__username__iexact=username)
 
+    def get_by_month(self, year, month):
+        return super(AssetManager, self).get_query_set().filter(updated__year=year).filter(updated__month=month)
 
 class Asset(models.Model):
     objects = AssetManager()
