@@ -6,6 +6,8 @@ PROJECT_DIR = os.path.dirname(__file__)
 HOME_DIR = os.path.normpath(os.path.join(PROJECT_DIR, '../'))
 
 # allow the use of wildcards in the INTERAL_IPS setting
+
+
 class IPList(list):
     # do a unix-like glob match
     # E.g. '192.168.1.100' would match '192.*'
@@ -72,14 +74,14 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    #     'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -9,21 +9,24 @@ from models import *
 
 logger = logging.getLogger(__name__)
 
+
 @login_required
 def index(request):
-    searchcat = request.GET.get('searchcat','')
-    searchtext = request.GET.get('searchtext','')
+    searchcat = request.GET.get('searchcat', '')
+    searchtext = request.GET.get('searchtext', '')
     if searchtext != '':
-        print ' * SEARCH',searchcat,searchtext
-    
-    file_list = Asset.objects.get_search_result(searchcat,searchtext)
+        print ' * SEARCH', searchcat, searchtext
+
+    file_list = Asset.objects.get_search_result(searchcat, searchtext)
     form = UploadFileForm()
     m = {'file_list': file_list, 'form': form}
     m.update(csrf(request))
-    return render(request,'uploader/index.html', m)
+    return render(request, 'uploader/index.html', m)
+
 
 def fooview(request, foo_id):
     return HttpResponse('from fooview. %s' % foo_id)
+
 
 @login_required
 def upload_file(request):
@@ -33,7 +36,8 @@ def upload_file(request):
 
     return HttpResponseRedirect('/')
 
-@login_required #TODO: faculty/staff only
+
+@login_required  # TODO: faculty/staff only
 def manage_file(request):
     file_list = Asset.objects.get_by_user(request.user.username)
     form = UploadFileForm()
