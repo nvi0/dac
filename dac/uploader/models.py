@@ -60,7 +60,7 @@ class Asset(models.Model):
         return ', '.join(keyword.text for keyword in self.keywords.all())
 
     def populate(self, username, info):
-        # TODO: str_filename existed
+        # TODO: exception str_filename existed
         self.title = info['title'] if info[
             'title'] != '' else info['file'].name
         self.mime_type = info['file'].content_type
@@ -91,7 +91,10 @@ class Asset(models.Model):
     def str_filename(self):
         # to be given to file to be downloaded
         # <title.replace(' ','_')>.<nice_type>
-        return '.'.join([self.title.replace(' ','_'),self.nice_type])
+        ext = ''.join(['.',self.nice_type])
+        if ('/' in self.nice_type) or (self.title[-4:] == ext):
+            ext = ''
+        return ''.join([self.title.replace(' ','_'),ext])
 
 class Keyword(models.Model):
     kid = models.AutoField(primary_key=True)

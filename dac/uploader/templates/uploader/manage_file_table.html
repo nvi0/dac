@@ -1,0 +1,23 @@
+<table id="fileTable" class="tablesorter table table-hover">
+<thead>
+	<tr>
+		<td>Title</td>
+		<td>Type</td>
+		<td>Modified</td>
+		<td>Owner</td>
+		<td>Tags</td>
+		<td>Delete</td>
+	</tr>
+</thead>
+<tbody>
+{% for fileinfo in file_list %}
+	<tr>
+		<td>{{ fileinfo.title }}</td>
+		<td>{{ fileinfo.nice_type }}</td>
+		<td>{{ fileinfo.updated }}</td>
+		<td>{{ fileinfo.uid }}</td>
+		<td>{{ fileinfo.str_keywords }}</td>
+		<td><a href="{% url 'dac.uploader.views.manage_file' %}">Del</a></td>
+	</tr>
+{% endfor %}
+</tbody>

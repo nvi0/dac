@@ -1,5 +1,6 @@
 import os
 from datetime import date
+from dac.uploader.models import *
 FILE_DIR = '/tmp'
 
 
@@ -17,6 +18,23 @@ def handle_uploaded_file(file, assetid):
     with open('/'.join([path, save_file_name]), 'wb+') as destination:
         for chunk in file.chunks():
             destination.write(chunk)
+
+def handle_delete_file(user, aid):
+    asset = Asset.objects.get(pk=aid)
+    if not asset:
+        # raise error message
+        return
+
+    owner = asset.uid.user
+    if user != owner:
+        # raise not permission message
+        return
+
+    print ' * Deleting file',asset.str_filename(),'of user', user.username
+    # asset.delete()
+    # cascade keyword
+    # delete file
+
 
 
 def _gen_file_path():
