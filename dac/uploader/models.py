@@ -1,6 +1,8 @@
 import mimetypes
+from datetime import date
 from django.db import models
 from django.contrib.auth.models import User
+from dac.settings import FILE_DIR
 
 POSITIONS = (
     ('f', 'Faculty'),
@@ -95,6 +97,16 @@ class Asset(models.Model):
         if ('/' in self.nice_type) or (self.title[-4:] == ext):
             ext = ''
         return ''.join([self.title.replace(' ','_'),ext])
+    
+    def gen_full_file_name(self):
+        return '/'.join([self.gen_file_path(), self.gen_file_name()])
+    
+    def gen_file_name(self):
+        return ''.join(['dacf_', str(self.aid)])
+
+    def gen_file_path(self):
+        return '/'.join([FILE_DIR, str(self.submitted.year), str(self.submitted.month)])
+
 
 class Keyword(models.Model):
     kid = models.AutoField(primary_key=True)

@@ -11,7 +11,8 @@
 <tbody>
 {% for fileinfo in file_list %}
 	<tr>
-		<td>{{ fileinfo.title }}</td>
+		{# <td>{{ fileinfo.title }}</td> #}
+		<td><p><a href="{% url 'dac.uploader.views.send_one_file' fileinfo.aid %}">{{ fileinfo.title }}</a></p></td>
 		<td>{{ fileinfo.nice_type }}</td>
 		<td>{{ fileinfo.updated }}</td>
 		<td>{{ fileinfo.uid }}</td>

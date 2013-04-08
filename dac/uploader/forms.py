@@ -2,6 +2,9 @@ from django import forms
 from models import *
 from helpers import handle_uploaded_file
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 class UploadFileForm(forms.Form):
     title = forms.CharField(required=False, label='Title', max_length=30)
@@ -11,7 +14,7 @@ class UploadFileForm(forms.Form):
     def handle(self, username):
         if self.is_valid():
             info = self.cleaned_data
-            print ' '.join([' * Uploading file:', str(file), 'by', username])
+            logger.info(' '.join(['* Uploading file:', str(file), 'by', username]))
             asset = Asset()
             asset.populate(username, info)
-            handle_uploaded_file(info['file'], asset.aid)
+            handle_uploaded_file(info['file'], asset)
