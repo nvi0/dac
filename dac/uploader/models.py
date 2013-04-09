@@ -94,7 +94,7 @@ class Asset(models.Model):
         # to be given to file to be downloaded
         # <title.replace(' ','_')>.<nice_type>
         ext = ''.join(['.',self.nice_type])
-        if ('/' in self.nice_type) or (self.title[-4:] == ext):
+        if ('/' in self.nice_type) or (self.title[-len(ext):] == ext):
             ext = ''
         return ''.join([self.title.replace(' ','_'),ext])
     
