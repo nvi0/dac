@@ -49,7 +49,7 @@ class Asset(models.Model):
     aid = models.AutoField(primary_key=True)
     uid = models.ForeignKey('DacUser')
     mime_type = models.CharField(max_length=200)
-    nice_type = models.CharField(max_length=5)
+    nice_type = models.CharField(max_length=10)
     title = models.CharField(max_length=200)
     submitted = models.DateField(auto_now_add=True)
     updated = models.DateField(auto_now=True)
@@ -66,13 +66,9 @@ class Asset(models.Model):
         self.title = info['title'] if info[
             'title'] != '' else info['file'].name
         self.mime_type = info['file'].content_type
-        # set nice_type to either (in order)
-        #   1. original file extention
-        #   2. guess from mime_type
-        #   3. full mime_type
+        # set nice_type to either original file extention or 'unknown'
         ori_type = info['file'].name[info['file'].name.rfind('.')+1:]
-        guess_type = mimetypes.guess_extension(self.mime_type)
-        self.nice_type = ori_type if len(ori_type) <= 4 else guess_type[1:] if guess_type else self.mime_type
+        self.nice_type = ori_type if len(ori_type) <= 4 else 'unknown'
 
         self.uid = DacUser.objects.get(user__username=username)
         self.save()
@@ -94,7 +90,7 @@ class Asset(models.Model):
         # to be given to file to be downloaded
         # <title.replace(' ','_')>.<nice_type>
         ext = ''.join(['.',self.nice_type])
-        if ('/' in self.nice_type) or (self.title[-len(ext):] == ext):
+        if (self.nice_type == 'unknown') or (self.title[-len(ext):] == ext):
             ext = ''
         return ''.join([self.title.replace(' ','_'),ext])
     
