@@ -1,3 +1,5 @@
+{% load url from future %} {# Prior to Django 1.5 #}
+
 <table id="fileTable" class="tablesorter table table-hover">
 <thead>
 	<tr>
@@ -12,7 +14,7 @@
 {% for fileinfo in file_list %}
 	<tr>
 		{# <td>{{ fileinfo.title }}</td> #}
-		<td><p><a href="{% url 'dac.uploader.views.send_one_file' fileinfo.aid %}">{{ fileinfo.title }}</a></p></td>
+		<td><a href="{% url 'dac.uploader.views.send_one_file' fileinfo.aid %}">{{ fileinfo.title }}</a></td>
 		<td>{{ fileinfo.nice_type }}</td>
 		<td>{{ fileinfo.updated }}</td>
 		<td>{{ fileinfo.uid }}</td>
@@ -20,3 +22,23 @@
 	</tr>
 {% endfor %}
 </tbody>
+</table>
+<div class="pagination">
+    <span class="current">
+        Page {{ file_list.number }} of {{ file_list.paginator.num_pages }}.
+    </span>
+	<span class="step-links">
+        {% if file_list.has_previous %}
+            <a href="{% url 'dac.uploader.views.index' file_list.previous_page_number %}">previous</a>
+		{% else %}
+			previous
+		{% endif %}
+
+
+        {% if file_list.has_next %}
+            <a href="{% url 'dac.uploader.views.index' file_list.next_page_number %}">next</a>
+		{% else %}
+		next
+		{% endif %}
+	</span>
+</div>

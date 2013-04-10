@@ -1,6 +1,9 @@
+{% load url from future %} {# Prior to Django 1.5 #}
+
 <table id="fileTable" class="tablesorter table table-hover">
 <thead>
 	<tr>
+		<td>Select</td>
 		<td>Title</td>
 		<td>Type</td>
 		<td>Modified</td>
@@ -10,14 +13,19 @@
 	</tr>
 </thead>
 <tbody>
+<form method="POST" action="{% url 'dac.uploader.views.delete_selected_files' %}">{% csrf_token %}
 {% for fileinfo in file_list %}
 	<tr>
+		<td><input type="checkbox" name="{{ fileinfo.aid }}"></td>
 		<td>{{ fileinfo.title }}</td>
 		<td>{{ fileinfo.nice_type }}</td>
 		<td>{{ fileinfo.updated }}</td>
 		<td>{{ fileinfo.uid }}</td>
 		<td>{{ fileinfo.str_keywords }}</td>
-		<td><a href="{% url 'dac.uploader.views.manage_file' %}">Del</a></td>
+		<td><a href="{% url 'dac.uploader.views.delete_one_file' fileinfo.aid %}">Del</a><td>
 	</tr>
 {% endfor %}
+<input type="submit" value="Delete selected">
+</form>
 </tbody>
+</table>
