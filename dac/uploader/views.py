@@ -5,6 +5,7 @@ from django.shortcuts import render, render_to_response
 from django.core.context_processors import csrf
 from django.contrib.auth.decorators import login_required
 from django.core.servers.basehttp import FileWrapper
+from django.core.paginator import Paginator
 
 from forms import UploadFileForm
 from models import *
@@ -15,15 +16,23 @@ URL_INDEX = '/viewfiles/'
 URL_PERSONAL = '/viewfiles/personal/'
 
 @login_required
-def index(request):
+def index(request,page=1):
     searchcat = request.GET.get('searchcat', '')
     searchtext = request.GET.get('searchtext', '')
     if searchtext != '':
         logger.info(' '.join(['* SEARCH', searchcat, searchtext]))
 
     file_list = Asset.objects.get_search_result(searchcat, searchtext)
+    
+    # pagination
+    page = int(page)
+    paginator = Paginator(file_list, 5)
+    if (page<1) or (page>paginator.num_pages):
+        page = 1
+    file_sublist = paginator.page(page)
+    
     form = UploadFileForm()
-    m = {'file_list': file_list, 'form': form}
+    m = {'file_list': file_sublist, 'form': form, 'searchcat': searchcat, 'searchtext': searchtext}
     m.update(csrf(request))
     return render(request, 'uploader/index.html', m)
 

@@ -32,6 +32,21 @@
 	</tr>
 {% endfor %}
 </tbody>
+<div class="pagination">
+    <span class="current">
+        Page {{ file_list.number }} of {{ file_list.paginator.num_pages }}.
+    </span>
+	<span class="step-links">
+        {% if file_list.has_previous %}
+            <a href="{% url 'dac.uploader.views.index' file_list.previous_page_number %}">previous</a>
+        {% endif %}
+
+
+        {% if file_list.has_next %}
+            <a href="{% url 'dac.uploader.views.index' file_list.next_page_number %}">next</a>
+        {% endif %}
+	</span>
+</div>
 {% include "uploader/upload_file.html" %}
 
 {% endblock %}
