@@ -17,10 +17,12 @@ URL_PERSONAL = '/viewfiles/personal/'
 
 @login_required
 def index(request,page=1):
+    m = {}
     searchcat = request.GET.get('searchcat', '')
     searchtext = request.GET.get('searchtext', '')
     if searchtext != '':
         logger.info(' '.join(['* SEARCH', searchcat, searchtext]))
+        m.update({'searchcat': searchcat, 'searchtext': searchtext})
 
     file_list = Asset.objects.get_search_result(searchcat, searchtext)
     
@@ -30,9 +32,11 @@ def index(request,page=1):
     if (page<1) or (page>paginator.num_pages):
         page = 1
     file_sublist = paginator.page(page)
+    pages = list(range(1,paginator.num_pages+1))
     
     form = UploadFileForm()
-    m = {'file_list': file_sublist, 'form': form, 'searchcat': searchcat, 'searchtext': searchtext}
+    m.update({'file_list': file_sublist, 'pages': pages, 'form': form,})
+    
     m.update(csrf(request))
     return render(request, 'uploader/index.html', m)
 

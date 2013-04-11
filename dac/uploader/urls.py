@@ -3,7 +3,7 @@ from dac.uploader import views
 
 urlpatterns = patterns('',
                        url(r'^$', views.index, name='index'),
-                       url(r'^(?P<page>\d+)/$', views.index, name='index'),
+                       url(r'^page/(?P<page>\d+)/$', views.index, name='index'),
                        url(r'^personal/$', views.manage_file),
                        url(r'^personal/delete/(?P<aid>\d+)/$', views.delete_one_file),
                        url(r'^personal/delete/$', views.delete_selected_files),

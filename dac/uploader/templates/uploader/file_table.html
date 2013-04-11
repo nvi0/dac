@@ -23,22 +23,40 @@
 {% endfor %}
 </tbody>
 </table>
-<div class="pagination">
-    <span class="current">
-        Page {{ file_list.number }} of {{ file_list.paginator.num_pages }}.
-    </span>
-	<span class="step-links">
-        {% if file_list.has_previous %}
-            <a href="{% url 'dac.uploader.views.index' file_list.previous_page_number %}">previous</a>
+<div class="pagination pagination-right pagination-small">
+    <ul>
+    {% if file_list.has_previous %}
+		{% if searchtext %}
+        	<li><a href="{% url 'dac.uploader.views.index' file_list.previous_page_number %}?searchcat={{ searchcat }}&searchtext={{ searchtext }}" class="page">&lsaquo;&lsaquo;</a></li>
 		{% else %}
-			previous
+        	<li><a href="{% url 'dac.uploader.views.index' file_list.previous_page_number %}" class="prev">&lsaquo;&lsaquo;</a></li>
 		{% endif %}
-
-
-        {% if file_list.has_next %}
-            <a href="{% url 'dac.uploader.views.index' file_list.next_page_number %}">next</a>
+    {% else %}
+        <li class="disabled prev"><a href="#">&lsaquo;&lsaquo;</a></li>
+    {% endif %}
+    {% for page in pages %}
+        {% if page %}
+            {% ifequal page file_list.number %}
+                <li class="current page active"><a href="#">{{ page }}</a></li>
+            {% else %}
+				{% if searchtext %}
+                	<li><a href="{% url 'dac.uploader.views.index' page %}?searchcat={{ searchcat }}&searchtext={{ searchtext }}" class="page">{{ page }}</a></li>
+				{% else %}
+					<li><a href="{% url 'dac.uploader.views.index' page %}" class="page">{{ page }}</a></li>
+				{% endif %}
+            {% endifequal %}
+        {% else %}
+            asdf
+        {% endif %}
+    {% endfor %}
+    {% if file_list.has_next %}
+		{% if searchtext %}
+    		<li><a href="{% url 'dac.uploader.views.index' file_list.next_page_number %}?searchcat={{ searchcat }}&searchtext={{ searchtext }}" class="page">&rsaquo;&rsaquo;</a></li>
 		{% else %}
-		next
+			<li><a href="{% url 'dac.uploader.views.index' file_list.next_page_number %}" class="next">&rsaquo;&rsaquo;</a></li>
 		{% endif %}
-	</span>
+    {% else %}
+        <li class="disabled next"><a href="#">&rsaquo;&rsaquo;</a></li>
+    {% endif %}
+    </ul>
 </div>
