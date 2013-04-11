@@ -5,11 +5,10 @@ from django.shortcuts import render, render_to_response
 from django.core.context_processors import csrf
 from django.contrib.auth.decorators import login_required
 from django.core.servers.basehttp import FileWrapper
-from django.core.paginator import Paginator
 
 from forms import UploadFileForm
 from models import *
-from helpers import handle_delete_file
+from helpers import handle_delete_file, get_file_list
 
 logger = logging.getLogger(__name__)
 URL_INDEX = '/viewfiles/'
@@ -17,41 +16,32 @@ URL_PERSONAL = '/viewfiles/personal/'
 
 @login_required
 def index(request,page=1):
-    m = {}
-    searchcat = request.GET.get('searchcat', '')
-    searchtext = request.GET.get('searchtext', '')
-    if searchtext != '':
-        logger.info(' '.join(['* SEARCH', searchcat, searchtext]))
-        m.update({'searchcat': searchcat, 'searchtext': searchtext})
+    m = get_file_list(request, page)
 
-    file_list = Asset.objects.get_search_result(searchcat, searchtext)
-    
-    # pagination
-    page = int(page)
-    paginator = Paginator(file_list, 5)
-    if (page<1) or (page>paginator.num_pages):
-        page = 1
-    file_sublist = paginator.page(page)
-    pages = list(range(1,paginator.num_pages+1))
-    
     form = UploadFileForm()
-    m.update({'file_list': file_sublist, 'pages': pages, 'form': form,})
-    
+    m.update({'form': form})
     m.update(csrf(request))
+    
     return render(request, 'uploader/index.html', m)
 
 
 def fooview(request, foo_id):
     return HttpResponse('from fooview. %s' % foo_id)
 
-
 @login_required
-def upload_file(request):
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        form.handle(request.user.username)
+def upload_file(request, page=1):
+    if request.method != 'POST':
+        return HttpResponseRedirect(URL_INDEX)
 
-    return HttpResponseRedirect(URL_INDEX)
+    form = UploadFileForm(request.POST, request.FILES)
+    form.handle(request.user.username)
+
+    if not form.errors:
+        return HttpResponseRedirect(''.join([URL_INDEX,'page/',str(page),'/']))
+
+    m = get_file_list(request, page)
+    m.update({'form': form})
+    return render(request, 'uploader/index.html', m)
 
 
 @login_required  # TODO: faculty/staff only

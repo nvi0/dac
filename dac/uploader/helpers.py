@@ -1,4 +1,6 @@
 import os
+from django.core.paginator import Paginator
+
 from dac.uploader.models import *
 
 import logging
@@ -40,3 +42,26 @@ def handle_delete_file(user, aid):
     asset.delete()
     # TODO: cascade keyword
 
+def is_duplicate_file(new_title):
+    return (len(Asset.objects.get_by_exact_title(new_title)) != 0)
+    
+def get_file_list(request,page):
+    m = {}
+    searchcat = request.GET.get('searchcat', '')
+    searchtext = request.GET.get('searchtext', '')
+    if searchtext != '':
+        logger.info(' '.join(['* SEARCH', searchcat, searchtext]))
+        m.update({'searchcat': searchcat, 'searchtext': searchtext})
+
+    file_list = Asset.objects.get_search_result(searchcat, searchtext)
+    
+    # pagination
+    page = int(page)
+    paginator = Paginator(file_list, 5)
+    if (page<1) or (page>paginator.num_pages):
+        page = 1
+    file_sublist = paginator.page(page)
+    pages = list(range(1,paginator.num_pages+1))
+    m.update({'file_list': file_sublist, 'pages': pages,})
+    
+    return m

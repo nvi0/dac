@@ -21,6 +21,7 @@ class DacUser(models.Model):
 
 
 class AssetManager(models.Manager):
+    # note: by default MySql string comparison is case-insensitive
     def get_search_result(self, searchcat, searchtext):
         if searchcat == 'ti':
             return super(AssetManager, self).get_query_set().filter(title__icontains=searchtext)
@@ -43,6 +44,9 @@ class AssetManager(models.Manager):
     def get_by_month(self, year, month):
         return super(AssetManager, self).get_query_set().filter(updated__year=year).filter(updated__month=month)
 
+    def get_by_exact_title(self, title):
+        return super(AssetManager, self).get_query_set().filter(title__exact=title)
+
 class Asset(models.Model):
     objects = AssetManager()
 
@@ -62,9 +66,7 @@ class Asset(models.Model):
         return ', '.join(keyword.text for keyword in self.keywords.all())
 
     def populate(self, username, info):
-        # TODO: exception str_filename existed
-        self.title = info['title'] if info[
-            'title'] != '' else info['file'].name
+        self.title = info['title'] if info['title'] != '' else info['file'].name
         self.mime_type = info['file'].content_type
         # set nice_type to either original file extention or 'unknown'
         ori_type = info['file'].name[info['file'].name.rfind('.')+1:]
