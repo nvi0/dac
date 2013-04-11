@@ -45,7 +45,7 @@ def handle_delete_file(user, aid):
 def is_duplicate_file(new_title):
     return (len(Asset.objects.get_by_exact_title(new_title)) != 0)
     
-def get_file_list(request,page):
+def get_file_list(request, perpage, page):
     m = {}
     searchcat = request.GET.get('searchcat', '')
     searchtext = request.GET.get('searchtext', '')
@@ -57,7 +57,7 @@ def get_file_list(request,page):
     
     # pagination
     page = int(page)
-    paginator = Paginator(file_list, 5)
+    paginator = Paginator(file_list, perpage)
     if (page<1) or (page>paginator.num_pages):
         page = 1
     file_sublist = paginator.page(page)

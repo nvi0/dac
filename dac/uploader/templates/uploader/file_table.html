@@ -60,7 +60,7 @@
     {% endif %}
     </ul>
 </div>
-<form enctype="multipart/form-data" method="post" action="{% url 'dac.uploader.views.upload_file' file_list.number %}">
+<form enctype="multipart/form-data" method="post" action="{% url 'dac.uploader.views.index' file_list.number %}">
     {% csrf_token %}
      <table>
 		 {{form.as_table}}

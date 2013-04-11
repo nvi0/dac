@@ -15,34 +15,21 @@ URL_INDEX = '/viewfiles/'
 URL_PERSONAL = '/viewfiles/personal/'
 
 @login_required
-def index(request,page=1):
-    m = get_file_list(request, page)
+def index(request, perpage=30, page=1):
+    if request.method == 'POST':
+        # handle upload    
+        form = UploadFileForm(request.POST, request.FILES)
+        form.handle(request.user.username)
+        if form.errors:
+            m = get_file_list(request, perpage, page)
+            m.update({'form': form})
+            return render(request, 'uploader/index.html', m)
 
+    m = get_file_list(request, perpage, page)
     form = UploadFileForm()
-    m.update({'form': form})
     m.update(csrf(request))
-    
-    return render(request, 'uploader/index.html', m)
-
-
-def fooview(request, foo_id):
-    return HttpResponse('from fooview. %s' % foo_id)
-
-@login_required
-def upload_file(request, page=1):
-    if request.method != 'POST':
-        return HttpResponseRedirect(URL_INDEX)
-
-    form = UploadFileForm(request.POST, request.FILES)
-    form.handle(request.user.username)
-
-    if not form.errors:
-        return HttpResponseRedirect(''.join([URL_INDEX,'page/',str(page),'/']))
-
-    m = get_file_list(request, page)
     m.update({'form': form})
     return render(request, 'uploader/index.html', m)
-
 
 @login_required  # TODO: faculty/staff only
 def manage_file(request):
