@@ -46,7 +46,7 @@ def is_duplicate_file(new_title):
     return (len(Asset.objects.get_by_exact_title(new_title)) != 0)
     
 def get_file_list(request, perpage, page):
-    m = {}
+    m = {'perpage': perpage}
     searchcat = request.GET.get('searchcat', '')
     searchtext = request.GET.get('searchtext', '')
     if searchtext != '':
@@ -58,8 +58,7 @@ def get_file_list(request, perpage, page):
     # pagination
     page = int(page)
     paginator = Paginator(file_list, perpage)
-    if (page<1) or (page>paginator.num_pages):
-        page = 1
+    page = 1 if page < 1 else paginator.num_pages if page > paginator.num_pages else page
     file_sublist = paginator.page(page)
     pages = list(range(1,paginator.num_pages+1))
     m.update({'file_list': file_sublist, 'pages': pages,})
