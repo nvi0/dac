@@ -1,6 +1,6 @@
 {% load url from future %} {# Prior to Django 1.5 #}
 
-<table id="fileTable" class="tablesorter">
+<table id="fileTable" class="tablesorter table table-condensed">
 <thead>
 	<tr>
 		<th>Title</th>
@@ -23,6 +23,7 @@
 {% endfor %}
 </tbody>
 </table>
+
 {% spaceless %}
 <div class="pagination pagination-right pagination-small">
     <ul>
