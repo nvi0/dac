@@ -15,21 +15,35 @@ URL_INDEX = '/viewfiles/'
 URL_PERSONAL = '/viewfiles/personal/'
 
 @login_required
-def index(request, perpage=30, page=1):
+def index(request):
     if request.method == 'POST':
         # handle upload    
         form = UploadFileForm(request.POST, request.FILES)
         form.handle(request.user.username)
         if form.errors:
-            m = get_file_list(request, perpage, page)
+            m = get_file_list(request)
             m.update({'form': form})
             return render(request, 'uploader/index.html', m)
 
-    m = get_file_list(request, perpage, page)
+    m = get_file_list(request)
     form = UploadFileForm()
     m.update(csrf(request))
     m.update({'form': form})
+    
+    # not ajax
     return render(request, 'uploader/index.html', m)
+'''    
+    # feed ajax
+    page = request.GET.get('page', 0)
+    size = request.GET.get('size', 20)
+    # {
+    #   "data" : [{ "ID": 1, "Name": "Foo", "Last": "Bar" }],
+    #   "total_rows" : 100 
+    # }
+    to_json = []
+    for asset in m['file_list']:
+        to_json.append([asset.title, asset.nice_type, asset.updated, asset.uid, asset.str_keyword()])
+'''    
 
 @login_required  # TODO: faculty/staff only
 def manage_file(request):

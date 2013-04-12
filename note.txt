@@ -4,3 +4,6 @@ src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 <script type="text/javascript" 
 src="http://mottie.github.io/tablesorter/js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" 
+src="http://tablesorter.com/addons/pager/jquery.tablesorter.pager.js"></script>
+

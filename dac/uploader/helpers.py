@@ -45,8 +45,8 @@ def handle_delete_file(user, aid):
 def is_duplicate_file(new_title):
     return (len(Asset.objects.get_by_exact_title(new_title)) != 0)
     
-def get_file_list(request, perpage, page):
-    m = {'perpage': perpage}
+def get_file_list(request):
+    m = {}
     searchcat = request.GET.get('searchcat', '')
     searchtext = request.GET.get('searchtext', '')
     if searchtext != '':
@@ -55,12 +55,6 @@ def get_file_list(request, perpage, page):
 
     file_list = Asset.objects.get_search_result(searchcat, searchtext)
     
-    # pagination
-    page = int(page)
-    paginator = Paginator(file_list, perpage)
-    page = 1 if page < 1 else paginator.num_pages if page > paginator.num_pages else page
-    file_sublist = paginator.page(page)
-    pages = list(range(1,paginator.num_pages+1))
-    m.update({'file_list': file_sublist, 'pages': pages,})
+    m.update({'file_list': file_list})
     
     return m
