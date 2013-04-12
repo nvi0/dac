@@ -1,5 +1,4 @@
 import os
-from django.core.paginator import Paginator
 
 from dac.uploader.models import *
 

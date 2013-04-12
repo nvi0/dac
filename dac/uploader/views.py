@@ -30,20 +30,7 @@ def index(request):
     m.update(csrf(request))
     m.update({'form': form})
     
-    # not ajax
     return render(request, 'uploader/index.html', m)
-'''    
-    # feed ajax
-    page = request.GET.get('page', 0)
-    size = request.GET.get('size', 20)
-    # {
-    #   "data" : [{ "ID": 1, "Name": "Foo", "Last": "Bar" }],
-    #   "total_rows" : 100 
-    # }
-    to_json = []
-    for asset in m['file_list']:
-        to_json.append([asset.title, asset.nice_type, asset.updated, asset.uid, asset.str_keyword()])
-'''    
 
 @login_required  # TODO: faculty/staff only
 def manage_file(request):
