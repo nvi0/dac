@@ -11,7 +11,7 @@
 
 	{% include "uploader/searchbox.html" %}
 	{% include "uploader/file_table.html" %}
-	{# {% include "uploader/upload_file.html" %} #}
+	{% include "uploader/upload_file.html" %}
 
 {% endblock %}
 
@@ -20,7 +20,28 @@
 		$(document).ready(function() {
 			$("#fileTable")
 			.tablesorter()
-		    .tablesorterPager({container: $("#pager")}); 
+		    .tablesorterPager({container: $("#pager"), positionFixed: false});
+			$("#fileUpload").accordion({ collapsible: true, header: "h5", active: 2});
 		});
 	</script>
+	{% comment %}
+		tablesorterPager.defaults = {
+			size: 10,
+			offset: 0,
+			page: 0,
+			totalRows: 0,
+			totalPages: 0,
+			container: null,
+			cssNext: '.next',
+			cssPrev: '.prev',
+			cssFirst: '.first',
+			cssLast: '.last',
+			cssPageDisplay: '.pagedisplay',
+			cssPageSize: '.pagesize',
+			seperator: "/",
+			positionFixed: true,
+			appender: this.appender
+		};
+	{% endcomment %}
+
 {% endblock %}
