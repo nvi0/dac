@@ -1,0 +1,8 @@
+{% load url from future %} {# Prior to Django 1.5 #}
+<tr>
+	<td><a href="{% url 'dac.uploader.views.send_one_file' fileinfo.aid %}">{{ fileinfo.title }}</a></td>
+	<td>{{ fileinfo.nice_type }}</td>
+	<td>{{ fileinfo.updated }}</td>
+	<td>{{ fileinfo.uid }}</td>
+	<td>{{ fileinfo.str_keywords }}</td>
+</tr>

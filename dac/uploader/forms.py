@@ -35,3 +35,5 @@ class UploadFileForm(forms.Form):
             asset = Asset()
             asset.populate(username, info)
             handle_uploaded_file(info['file'], asset)
+            return asset
+        return False    

@@ -71,10 +71,16 @@
 		} 
  
 		// post-submit callback 
-		function showResponse(responseText, statusText, xhr, $form)  {
-			alert('yes')
-			 alert('status: ' + statusText + '\n\nresponseText: \n' + responseText + 
-		        '\n\nThe output div should have already been updated with the responseText.'); 
+		function showResponse(json_obj, statusText, xhr, $form)  {
+			alert('yes');
+			alert('status: ' + statusText + '\n\nresponseText: \n' + json_obj.is_success);
+			if (!json_obj.is_success) {
+				// ask to overwrite
+				document.getElementById("message").innerHTML="Existed file!";
+			} else {
+				// display success message; add row to table
+				document.getElementById("message").innerHTML="File uploaded successfully!";
+			}
 		}
 
 	</script>

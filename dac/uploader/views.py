@@ -3,6 +3,7 @@ import os
 import json
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, render_to_response
+from django.template.loader import render_to_string
 from django.core.context_processors import csrf
 from django.contrib.auth.decorators import login_required
 from django.core.servers.basehttp import FileWrapper
@@ -17,22 +18,28 @@ URL_PERSONAL = '/viewfiles/personal/'
 
 @login_required
 def index(request):
-    if request.method == 'POST':
-        # handle upload    
-        form = UploadFileForm(request.POST, request.FILES)
-        form.handle(request.user.username)
-        if form.errors:
-            message = form.errors.get(['__all__']).as_text
-            print messat
-            return HttpResponse(json.dumps(form.errors.get(['__all__'],)), content_type="application/json")#render(request, 'uploader/index.html', m)
-        return HttpResponse('File uploaded succesfully!')
-
     m = get_file_list(request)
     form = UploadFileForm()
     m.update(csrf(request))
     m.update({'form': form})
 
     return render(request, 'uploader/index.html', m)
+
+@login_required # TODO: faculty/staff only
+def upload_file(request):
+    ''' handle ajax form submit, return json'''
+    if request.method == 'POST':
+        # handle upload    
+        form = UploadFileForm(request.POST, request.FILES)
+        newfile = form.handle(request.user.username)
+        response_data = {'is_success': (newfile != False)}
+        if newfile:
+            # include uploaded data into response_data
+            newfile_html = render_to_string("uploader/one_file_row.html", {'fileinfo': newfile})
+            response_data.update({'newfile': newfile_html })
+        print json.dumps(response_data)
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    return HttpResponseRedirect(URL_INDEX)
 
 @login_required  # TODO: faculty/staff only
 def manage_file(request):
