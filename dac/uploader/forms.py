@@ -23,7 +23,7 @@ class UploadFileForm(forms.Form):
         # check if file is duplicated
         new_title = cleaned_data['title'] if cleaned_data['title'] != '' else file_name
         if is_duplicate_file(new_title):
-            logger.info(' '.join(['* Unsuccessfull uploading duplicated file:', file_name, ]))
+            logger.info(' '.join(['* Unsuccessful uploading duplicated file:', file_name, ]))
             raise forms.ValidationError("Existed file") # TODO: ask to rewrite
         
         return cleaned_data

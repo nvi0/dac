@@ -1,5 +1,6 @@
 import logging
 import os
+import json
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 from django.core.context_processors import csrf
@@ -21,15 +22,16 @@ def index(request):
         form = UploadFileForm(request.POST, request.FILES)
         form.handle(request.user.username)
         if form.errors:
-            m = get_file_list(request)
-            m.update({'form': form})
-            return render(request, 'uploader/index.html', m)
+            message = form.errors.get(['__all__']).as_text
+            print messat
+            return HttpResponse(json.dumps(form.errors.get(['__all__'],)), content_type="application/json")#render(request, 'uploader/index.html', m)
+        return HttpResponse('File uploaded succesfully!')
 
     m = get_file_list(request)
     form = UploadFileForm()
     m.update(csrf(request))
     m.update({'form': form})
-    
+
     return render(request, 'uploader/index.html', m)
 
 @login_required  # TODO: faculty/staff only

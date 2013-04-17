@@ -1,11 +1,12 @@
 {% load url from future %} {# Prior to Django 1.5 #}
 <div id="fileUpload">
 	<h5>upload file</h5>
-	<form enctype="multipart/form-data" method="post" action="{% url 'dac.uploader.views.index' %}">
+	<form id="uploadForm" enctype="multipart/form-data" method="post" action="{% url 'dac.uploader.views.index' %}">
 		{% csrf_token %}
 		<table>
 			{{form.as_table}}
 		</table>
-		<input type="submit" value="Upload" id="Save"/>
+		<input type="submit" value="Upload" id="Save" disabled/>
 	</form>
 </div>
+<p id="message">{{ message }}</p>
