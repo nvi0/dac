@@ -5,6 +5,10 @@ from dac.uploader.models import *
 import logging
 logger = logging.getLogger(__name__)
 
+
+class PermissionError(Exception):
+    pass
+
 def handle_uploaded_file(file, asset, is_final):
     """
     Save file to temporary place.
@@ -33,8 +37,8 @@ def handle_confirmed_duplicated_file(user, aid):
     
     owner = asset.uid.user
     if user != owner:
-        # raise permission message
-        return
+        raise PermissionError()
+        
     full_file_name = asset.gen_full_file_name()
     tmp_file_name = ''.join([full_file_name,'_tmp'])
     if not os.path.isfile(tmp_file_name):
@@ -62,8 +66,8 @@ def handle_canceled_duplicated_file(user, aid):
     
     owner = asset.uid.user
     if user != owner:
-        # raise permission message
-        return
+        raise PermissionError()
+        
     full_file_name = asset.gen_full_file_name()
     tmp_file_name = ''.join([full_file_name,'_tmp'])
     if not os.path.isfile(tmp_file_name):
@@ -77,13 +81,11 @@ def handle_canceled_duplicated_file(user, aid):
 def handle_delete_file(user, aid):
     asset = Asset.objects.get(pk=aid)
     if not asset:
-        # raise error message
         return
 
     owner = asset.uid.user
     if user != owner:
-        # raise not permission message
-        return
+        raise PermissionError()
 
     logger.info(' '.join(['* Deleting file',asset.str_filename(),'of user', user.username]))
 
