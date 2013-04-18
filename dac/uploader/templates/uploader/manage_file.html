@@ -4,9 +4,14 @@
 
 {% block content %}
 
-<p>Welcome, {{ user.username }}.</p>
-<p><a href="{% url 'django.contrib.auth.views.logout_then_login' %}">Log out</a></p>
-<p><a href="{% url 'dac.uploader.views.index' %}">Home</a></p>
+<p>Welcome, {{ user.username }}!</p>
+<ul class="nav nav-tabs">
+	<li><a href="{% url 'dac.uploader.views.index' %}">Home</a></li>
+	<li class="active">
+		<a href="#">Manage Files</a>
+	</li>
+	<li><a href="{% url 'django.contrib.auth.views.logout_then_login' %}">Log out</a></li>
+</ul>
 
 {% include "uploader/searchbox.html" %}
 {% include "uploader/manage_file_table.html" %}

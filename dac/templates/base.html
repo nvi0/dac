@@ -1,3 +1,4 @@
+{% load url from future %} {# Prior to Django 1.5 #}
 
 <!DOCTYPE html>
 <html>
@@ -12,13 +13,14 @@
 		<script src="http://malsup.github.com/jquery.form.js"></script> 
     </head>
     <body>
+		<div class="container">
         {% block body %}
             <div id="header">
                 {% block header %}
+					<h1>DAC</h1>
                     <h1>{% block header_title %}{% endblock %}</h1>
                 {% endblock %}
             </div>
-
             <div id="content">
                 {% block content %}{% endblock %}
             </div>
@@ -29,6 +31,7 @@
                 {% endblock %}
             </div>
         {% endblock %}
+	</div>
 		{% block last %}
 		{% endblock %}
     </body>
