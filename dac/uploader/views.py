@@ -45,6 +45,7 @@ def upload_file(request):
 @login_required # TODO: faculty/staff only
 def confirm_upload_file(request):
     """
+    Handle ajax confirm post.
     Rename temporary saved file to correct file name.
     """
     if request.method == 'POST':

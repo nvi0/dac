@@ -6,7 +6,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 def handle_uploaded_file(file, asset):
-    # save file (temporary)
+    """
+    Save file to temporary place.
+    """
     path = asset.gen_file_path()
     try:
         os.makedirs(path)
@@ -19,6 +21,9 @@ def handle_uploaded_file(file, asset):
             destination.write(chunk)
 
 def handle_confirmed_uploaded_file(user, aid):
+    """
+    Rename temporary file name to correct name.
+    """
     asset = Asset.objects.get(pk=aid)
     if not asset:
         return
@@ -42,7 +47,7 @@ def handle_confirmed_uploaded_file(user, aid):
     os.rename(tmp_file_name,full_file_name)
     logger.info(' '.join(['* Sucessfully uploaded file:', asset.title, 'by', user.username]))
     
-    # asset.updated
+    # TODO: asset.updated
 
 def handle_delete_file(user, aid):
     asset = Asset.objects.get(pk=aid)
