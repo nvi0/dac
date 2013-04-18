@@ -23,9 +23,9 @@ class UploadFileForm(forms.Form):
         new_title = cleaned_data['title'] if cleaned_data['title'] != '' else file_name
         existed_asset = Asset.objects.get_by_exact_title(new_title)
         if existed_asset:
-            logger.info(' '.join(['* Unsuccessful uploading duplicated file:', file_name, ]))
+            logger.info(' '.join(['* User uploading duplicated file:', new_title, ]))
             # Store temporary file
-            handle_uploaded_file(cleaned_data['file'], existed_asset[0])
+            handle_uploaded_file(cleaned_data['file'], existed_asset[0], is_final=False)
             cleaned_data.update({'aid': existed_asset[0].aid})
         return cleaned_data
         
@@ -39,6 +39,6 @@ class UploadFileForm(forms.Form):
             # success adding new asset
             asset = Asset()
             asset.populate(username, info)
-            handle_uploaded_file(info['file'], asset)
+            handle_uploaded_file(info['file'], asset, is_final=True)
             return asset, asset.aid
         

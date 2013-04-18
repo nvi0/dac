@@ -10,7 +10,7 @@ from django.core.servers.basehttp import FileWrapper
 
 from forms import UploadFileForm
 from models import *
-from helpers import handle_delete_file, get_file_list, handle_confirmed_uploaded_file
+from helpers import handle_delete_file, get_file_list, handle_confirmed_duplicated_file, handle_canceled_duplicated_file
 
 logger = logging.getLogger(__name__)
 URL_INDEX = '/viewfiles/'
@@ -50,10 +50,9 @@ def confirm_upload_file(request):
     """
     if request.method == 'POST':
         if request.POST.get('overwrite') == 'true':
-            print 'yes'
-            handle_confirmed_uploaded_file(request.user,request.POST.get('aid'))
+            handle_confirmed_duplicated_file(request.user, request.POST.get('aid'))
         else:
-            pass # TODO: remove tmp file
+            handle_canceled_duplicated_file(request.user, request.POST.get('aid'))
     return HttpResponseRedirect(URL_INDEX)
 
 @login_required  # TODO: faculty/staff only

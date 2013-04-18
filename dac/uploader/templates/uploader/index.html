@@ -135,16 +135,13 @@
 	            });
 	        });
 	    } else {
-	        $.post("{% url 'dac.uploader.views.confirm_upload_file' %}", {
-	            overwrite: true,
-	            aid: json_obj.aid
-	        });
 	        // display success message; add row to table
 	        document.getElementById("message").innerHTML = "File uploaded successfully!";
 
 	        var row = json_obj.newfile; //,	$row = $(row), resort = true;
 	        $('#fileTable')
-	            .find('tbody').prepend(row)
+	        .find('tbody').prepend(row)
+			.trigger('update');
 	        //.trigger('addRows', [row, resort]);
 	        //.trigger('sorton',[ [[5,1],] ]); //descending asset id
 	    }
