@@ -20,6 +20,7 @@
 			<th>Modified</th>
 			<th>Owner</th>
 			<th>Tags</th>
+			<th style="display:none;">aid</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -30,6 +31,7 @@
 			<td>{{ fileinfo.updated }}</td>
 			<td>{{ fileinfo.uid }}</td>
 			<td>{{ fileinfo.str_keywords }}</td>
+			<td style="display:none;">{{ fileinfo.aid }}</td>
 		</tr>
 		{% endfor %}
 	</tbody>
