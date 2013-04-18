@@ -12,6 +12,9 @@
 	{% include "uploader/searchbox.html" %}
 	{% include "uploader/file_table.html" %}
 	{% include "uploader/upload_file.html" %}
+	<div id="dialog-confirm" title="Existed File!">
+		<p>The file is already existed. Do you want to overwrite?</p>
+	</div>
 {% endblock %}
 
 {% block last %}
@@ -65,9 +68,6 @@
 		    //alert('About to submit: \n\n' + queryString); 
 			
 			// do validation
-			
-		    // here we could return false to prevent the form from being submitted; 
-		    // returning anything other than false will allow the form submit to continue 
 		    return true; 
 		} 
  
@@ -77,19 +77,32 @@
 			if (!json_obj.is_success) {
 				// ask to overwrite
 				document.getElementById("message").innerHTML="Existed file!";
+				$(function() {
+					$("#dialog-confirm").dialog({
+						resizable: false,
+						height: 150,
+						model: true,
+						buttons: {
+							"Overwrite": function() {
+								$( this ).dialog( "close" );
+							},
+							Cancel: function() {
+								$( this ).dialog( "close" );
+							}
+						}
+					});
+				});
 			} else {
 				// display success message; add row to table
 				document.getElementById("message").innerHTML="File uploaded successfully!";
+
 				var row = json_obj.newfile;//,	$row = $(row), resort = true;
-				alert(row);
 				$('#fileTable')
 				.find('tbody').prepend(row)
 				//.trigger('addRows', [row, resort]);
 				//.trigger('sorton',[ [[5,1],] ]); //descending asset id
-				alert('added row!!!');
 			}
 		}
-
 	</script>
 	{% comment %}
 		tablesorterPager.defaults = {
