@@ -12,9 +12,6 @@
 	{% include "uploader/searchbox.html" %}
 	{% include "uploader/file_table.html" %}
 	{% include "uploader/upload_file.html" %}
-	<div id="dialog-confirm" title="Existed File!">
-		<p>The file is already existed. Do you want to overwrite?</p>
-	</div>
 {% endblock %}
 
 {% block last %}
@@ -80,7 +77,7 @@
 				$(function() {
 					$("#dialog-confirm").dialog({
 						resizable: false,
-						height: 150,
+						height: 180,
 						model: true,
 						buttons: {
 							"Overwrite": function() {
