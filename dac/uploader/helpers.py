@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 def handle_uploaded_file(file, asset):
-    # save file
+    # save file (temporary)
     path = asset.gen_file_path()
     try:
         os.makedirs(path)
@@ -14,9 +14,35 @@ def handle_uploaded_file(file, asset):
         if not os.path.isdir(path):
             raise
 
-    with open(asset.gen_full_file_name(), 'wb') as destination:
+    with open(''.join([asset.gen_full_file_name(),'_tmp']), 'wb') as destination:
         for chunk in file.chunks():
             destination.write(chunk)
+
+def handle_confirmed_uploaded_file(user, aid):
+    asset = Asset.objects.get(pk=aid)
+    if not asset:
+        return
+    
+    owner = asset.uid.user
+    if user != owner:
+        # raise permission message
+        return
+    full_file_name = asset.gen_full_file_name()
+    tmp_file_name = ''.join([full_file_name,'_tmp'])
+    if not os.path.isfile(tmp_file_name):
+        logger.warning(' '.join(['* Confirm requested with non existed tmp file:', tmp_file_name, 'by', username]))
+        return
+
+    logger.info(' '.join(['* Uploading file:', asset.title, 'by', user.username]))
+    try:
+        # delete previous file if any
+        os.remove(full_file_name)
+    except OSError:
+        pass
+    os.rename(tmp_file_name,full_file_name)
+    logger.info(' '.join(['* Sucessfully uploaded file:', asset.title, 'by', user.username]))
+    
+    # asset.updated
 
 def handle_delete_file(user, aid):
     asset = Asset.objects.get(pk=aid)

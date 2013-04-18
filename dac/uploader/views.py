@@ -10,7 +10,7 @@ from django.core.servers.basehttp import FileWrapper
 
 from forms import UploadFileForm
 from models import *
-from helpers import handle_delete_file, get_file_list
+from helpers import handle_delete_file, get_file_list, handle_confirmed_uploaded_file
 
 logger = logging.getLogger(__name__)
 URL_INDEX = '/viewfiles/'
@@ -27,23 +27,36 @@ def index(request):
 
 @login_required # TODO: faculty/staff only
 def upload_file(request):
-    ''' handle ajax form submit, return json'''
+    """ 
+    Handle ajax form submit, return json.
+    """
     if request.method == 'POST':
         # handle upload    
         form = UploadFileForm(request.POST, request.FILES)
-        newfile = form.handle(request.user.username)
-        response_data = {'is_success': (newfile != False)}
+        newfile,aid = form.handle(request.user.username)
+        response_data = {'is_success': (newfile != False), 'aid': aid}
         if newfile:
             # include uploaded data into response_data
             newfile_html = render_to_string("uploader/one_file_row.html", {'fileinfo': newfile})
             response_data.update({'newfile': newfile_html })
-        print json.dumps(response_data)
         return HttpResponse(json.dumps(response_data), content_type="application/json")
+    return HttpResponseRedirect(URL_INDEX)
+
+@login_required # TODO: faculty/staff only
+def confirm_upload_file(request):
+    """
+    Rename temporary saved file to correct file name.
+    """
+    if request.method == 'POST':
+        if request.POST.get('overwrite') == 'true':
+            print 'yes'
+            handle_confirmed_uploaded_file(request.user,request.POST.get('aid'))
+        else:
+            pass # TODO: remove tmp file
     return HttpResponseRedirect(URL_INDEX)
 
 @login_required  # TODO: faculty/staff only
 def manage_file(request):
-    
     searchcat = request.GET.get('searchcat', '')
     searchtext = request.GET.get('searchtext', '')
     if searchtext != '':

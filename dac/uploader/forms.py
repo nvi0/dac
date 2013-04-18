@@ -1,6 +1,6 @@
 from django import forms
 from models import *
-from helpers import handle_uploaded_file, is_duplicate_file
+from helpers import handle_uploaded_file
 
 import logging
 logger = logging.getLogger(__name__)
@@ -13,7 +13,6 @@ class UploadFileForm(forms.Form):
     
     def clean(self): # implicitly invoked by self.is_valid()
         cleaned_data = super(UploadFileForm, self).clean()
-        
         # check if file is not empty
         try:
             file_name = cleaned_data['file'].name
@@ -22,18 +21,24 @@ class UploadFileForm(forms.Form):
         
         # check if file is duplicated
         new_title = cleaned_data['title'] if cleaned_data['title'] != '' else file_name
-        if is_duplicate_file(new_title):
+        existed_asset = Asset.objects.get_by_exact_title(new_title)
+        if existed_asset:
             logger.info(' '.join(['* Unsuccessful uploading duplicated file:', file_name, ]))
-            raise forms.ValidationError("Existed file") # TODO: ask to rewrite
-        
+            # Store temporary file
+            handle_uploaded_file(cleaned_data['file'], existed_asset[0])
+            cleaned_data.update({'aid': existed_asset[0].aid})
         return cleaned_data
         
     def handle(self, username):
         if self.is_valid():
             info = self.cleaned_data
-            logger.info(' '.join(['* Uploading file:', info['file'].name, 'by', username]))
+            # existed asset
+            if 'aid' in info:
+                return False, info['aid']
+        
+            # success adding new asset
             asset = Asset()
             asset.populate(username, info)
             handle_uploaded_file(info['file'], asset)
-            return asset
-        return False    
+            return asset, asset.aid
+        
