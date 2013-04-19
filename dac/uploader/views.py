@@ -10,7 +10,7 @@ from django.core.servers.basehttp import FileWrapper
 
 from forms import UploadFileForm
 from models import *
-from helpers import handle_delete_file, get_file_list, handle_confirmed_duplicated_file, handle_canceled_duplicated_file
+from helpers import handle_delete_file, update_searchcat, get_file_list, handle_confirmed_duplicated_file, handle_canceled_duplicated_file
 
 logger = logging.getLogger(__name__)
 URL_INDEX = '/viewfiles/'
@@ -22,6 +22,7 @@ def index(request):
     form = UploadFileForm()
     m.update(csrf(request))
     m.update({'form': form})
+    m.update(update_searchcat(request.GET.get('searchcat', '')))
 
     return render(request, 'uploader/index.html', m)
 
@@ -67,6 +68,8 @@ def manage_file(request):
     
     form = UploadFileForm()
     m = {'file_list': file_list, 'form': form}
+    m.update(update_searchcat(searchcat))
+   
     m.update(csrf(request))
     return render(request, 'uploader/manage_file.html', m)
 

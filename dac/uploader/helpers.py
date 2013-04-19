@@ -107,9 +107,15 @@ def get_file_list(request):
     if searchtext != '':
         logger.info(' '.join(['* SEARCH', searchcat, searchtext]))
         m.update({'searchcat': searchcat, 'searchtext': searchtext})
-
+    
     file_list = Asset.objects.get_search_result(searchcat, searchtext)
     
     m.update({'file_list': file_list})
     
     return m
+    
+def update_searchcat(searchcat):
+    d = {'ti_selected':'', 'ty_selected':'', 'us_selected': '', 'ta_selected':''}
+    if searchcat != '':
+        d.update({''.join([searchcat,'_selected']): 'selected'})
+    return d
