@@ -90,8 +90,15 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'djangocas.middleware.CASMiddleware',
+    'django.middleware.doc.XViewMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+)
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'djangocas.backends.CASBackend',
 )
 
 ROOT_URLCONF = 'dac.urls'
@@ -167,8 +174,16 @@ LOGGING = {
         },
     }
 }
+CAS_SERVER_URL = 'https://sso.pdx.edu/cas/login'
+# prevents CAS login on the admin pages
+CAS_ADMIN_PREFIX = 'admin'
+
+# for django-cas to work, it needs HttpRequest.get_host(), which requires this setting
+# https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
+ALLOWED_HOSTS = ['.pdx.edu']
+
 LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/viewfiles/'
+# LOGIN_REDIRECT_URL = '/viewfiles/'
 FILE_DIR = '/tmp'
 
 from local_settings import *

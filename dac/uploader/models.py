@@ -11,14 +11,18 @@ POSITIONS = (
 )
 CATEGORIES = {'ti': 'title', 'ty': 'mime_type', 'us': 'uid', 'ta': 'kid'}
 
-
 class DacUser(models.Model):
     user = models.OneToOneField(User)
     position = models.CharField(max_length=1, choices=POSITIONS)
 
+    def populate(self, new_username):
+        self.user = User.objects.get(username=new_username)
+        self.user.save()
+        self.save()
+
     def __unicode__(self):
         return self.user.username
-
+        
 
 class AssetManager(models.Manager):
     # note: by default MySql string comparison is case-insensitive

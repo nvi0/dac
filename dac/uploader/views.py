@@ -10,7 +10,7 @@ from django.core.servers.basehttp import FileWrapper
 
 from forms import UploadFileForm
 from models import *
-from helpers import handle_delete_file, update_searchcat, get_file_list, handle_confirmed_duplicated_file, handle_canceled_duplicated_file
+from helpers import *
 
 logger = logging.getLogger(__name__)
 URL_INDEX = '/viewfiles/'
@@ -18,6 +18,7 @@ URL_PERSONAL = '/viewfiles/personal/'
 
 @login_required
 def index(request):
+    handle_new_user(request.user)
     m = get_file_list(request)
     form = UploadFileForm()
     m.update(csrf(request))

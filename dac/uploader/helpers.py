@@ -119,3 +119,10 @@ def update_searchcat(searchcat):
     if searchcat != '':
         d.update({''.join([searchcat,'_selected']): 'selected'})
     return d
+    
+def handle_new_user(new_user):
+    if DacUser.objects.filter(user__username=new_user.username):
+        return # nothing to do
+    logger.info('Creating new user logged in from CAS: {username}'.format(username=new_user.username))
+    dac_user = DacUser()
+    dac_user.populate(new_user.username)

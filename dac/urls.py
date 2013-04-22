@@ -11,8 +11,8 @@ urlpatterns = patterns('',
                        url(r'^admin/', include(admin.site.urls)),
                        url(r'^viewfiles/', include('dac.uploader.urls')),
 
-                       url(r'^login/$', 'django.contrib.auth.views.login', {
-                           'template_name': 'login.html'}),
-                       url(r'^logout/$',
-                           'django.contrib.auth.views.logout_then_login'),
+#                       url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
+#                       url(r'^logout/$','django.contrib.auth.views.logout_then_login'),
+                       url(r'^login/$', 'djangocas.views.login'),
+                       url(r'^logout/$','djangocas.views.logout'),
                        )

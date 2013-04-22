@@ -9,7 +9,7 @@
     		<a href="#">Home</a>
 		</li>
 		<li><a href="{% url 'dac.uploader.views.manage_file' %}">Manage Files</a></li>
-		<li><a href="{% url 'django.contrib.auth.views.logout_then_login' %}">Log out</a></li>
+		<li><a href="{% url 'djangocas.views.logout' %}">Log out</a></li>
     </ul>
 	{% include "uploader/searchbox.html" %}
 	{% include "uploader/file_table.html" %}
