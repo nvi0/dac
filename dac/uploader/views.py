@@ -35,12 +35,14 @@ def upload_file(request):
     if request.method == 'POST':
         # handle upload    
         form = UploadFileForm(request.POST, request.FILES)
-        newfile,aid = form.handle(request.user.username)
+        newfile, aid, owner = form.handle(request.user.username)
         response_data = {'is_success': (newfile != False), 'aid': aid}
         if newfile:
             # include uploaded data into response_data
             newfile_html = render_to_string("uploader/one_file_row.html", {'fileinfo': newfile})
             response_data.update({'newfile': newfile_html })
+        else:
+            response_data.update({'is_existed_owner': request.user.username==owner})
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     return HttpResponseRedirect(URL_INDEX)
 

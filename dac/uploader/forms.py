@@ -27,6 +27,7 @@ class UploadFileForm(forms.Form):
             # Store temporary file
             handle_uploaded_file(cleaned_data['file'], existed_asset[0], is_final=False)
             cleaned_data.update({'aid': existed_asset[0].aid})
+            cleaned_data.update({'existed_owner': existed_asset[0].uid.user.username})
         return cleaned_data
         
     def handle(self, username):
@@ -34,11 +35,11 @@ class UploadFileForm(forms.Form):
             info = self.cleaned_data
             # existed asset
             if 'aid' in info:
-                return False, info['aid']
+                return False, info['aid'], info['existed_owner']
         
             # success adding new asset
             asset = Asset()
             asset.populate(username, info)
             handle_uploaded_file(info['file'], asset, is_final=True)
-            return asset, asset.aid
+            return asset, asset.aid, username
         

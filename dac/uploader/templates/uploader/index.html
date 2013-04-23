@@ -112,32 +112,37 @@
 	    //alert('status: ' + statusText + '\n\nresponseText: \n' + json_obj.is_success);
 	    if (!json_obj.is_success) {
 	        // ask to overwrite
-	        document.getElementById("message").innerHTML = "Existed file!";
-	        $(function () {
-	            $("#dialog-confirm").dialog({
-	                resizable: false,
-	                height: 180,
-	                model: true,
-	                buttons: {
-	                    "Overwrite": function () {
-	                        $.post("{% url 'dac.uploader.views.confirm_upload_file' %}", {
-	                            overwrite: true,
-	                            aid: json_obj.aid
-	                        });
-	                        $(this).dialog("close");
-					        document.getElementById("message").innerHTML = "File uploaded successfully!";
-	                    },
-	                    Cancel: function () {
-	                        $.post("{% url 'dac.uploader.views.confirm_upload_file' %}", {
-	                            overwrite: false,
-	                            aid: json_obj.aid
-	                        });
-	                        $(this).dialog("close");
-					        document.getElementById("message").innerHTML = "CancelZ!";
-	                    }
-	                }
-	            });
-	        });
+			if (json_obj.is_existed_owner) { //only ask to overwrite if current user is owner of the existed file
+		        document.getElementById("message").innerHTML = "Existed file!";
+				$(function () {
+					$("#dialog-confirm").dialog({
+						resizable: false,
+						height: 180,
+						model: true,
+						buttons: {
+							"Overwrite": function () {
+								$.post("{% url 'dac.uploader.views.confirm_upload_file' %}", {
+									overwrite: true,
+									aid: json_obj.aid
+								});
+								$(this).dialog("close");
+								document.getElementById("message").innerHTML = "File uploaded successfully!";
+							},
+							Cancel: function () {
+								$.post("{% url 'dac.uploader.views.confirm_upload_file' %}", {
+									overwrite: false,
+									aid: json_obj.aid
+								});
+								$(this).dialog("close");
+								document.getElementById("message").innerHTML = "Canceled!";
+							}
+						}
+	            	});
+	        	});
+			} else {
+		        document.getElementById("message").innerHTML = "Existed file! You don't have permission to overwrite.";
+			}
+
 	    } else {
 	        // display success message; add row to table
 	        document.getElementById("message").innerHTML = "File uploaded successfully!";
