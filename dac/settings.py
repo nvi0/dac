@@ -44,7 +44,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = os.path.join(HOME_DIR, 'htdocs', 'media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -184,6 +184,6 @@ ALLOWED_HOSTS = ['.pdx.edu']
 
 LOGIN_URL = '/login/'
 # LOGIN_REDIRECT_URL = '/viewfiles/'
-FILE_DIR = '/tmp'
+FILE_DIR = MEDIA_ROOT
 
 from local_settings import *
