@@ -34,7 +34,7 @@ class AssetManager(models.Manager):
         if searchcat == 'ti':
             return super(AssetManager, self).get_query_set().filter(title__icontains=searchtext)
         elif searchcat == 'ty':
-            return super(AssetManager, self).get_query_set().filter(mime_type__iexact=searchtext)
+            return super(AssetManager, self).get_query_set().filter(nice_type__icontains=searchtext) #was mime_type__iexacts
         elif searchcat == 'us':
             return super(AssetManager, self).get_query_set().filter(uid__user__username__icontains=searchtext)
         elif searchcat == 'ta':
