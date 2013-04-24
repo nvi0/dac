@@ -17,15 +17,24 @@ class DacUser(models.Model):
 
     def populate(self, new_username):
         """
-        Populate new user. Default position: Student
+        Populate new user. Default position: Faculty (for testing)
         """
         self.user = User.objects.get(username=new_username)
         self.user.save()
-        self.position = 'u'
+        self.position = 'f'
         self.save()
 
     def __unicode__(self):
         return self.user.username
+    
+    def is_student(self):
+        return self.position == 'u'
+    
+    def is_power(self):
+        """
+        Rule: either Faculty or Staff
+        """
+        return self.position == 'f' or self.position == 's'
         
 
 class AssetManager(models.Manager):

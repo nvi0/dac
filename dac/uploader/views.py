@@ -24,15 +24,21 @@ def index(request):
     m.update(csrf(request))
     m.update({'form': form})
     m.update(update_searchcat(request.GET.get('searchcat', '')))
-
+    
+    #c = RequestContext(request, {'dac_user':get_dac_user(request.user.username)})
+    m.update({'dac_user':get_dac_user(request.user.username)})
     return render(request, 'uploader/index.html', m)
 
-@login_required # TODO: faculty/staff only
+@login_required 
 def upload_file(request):
     """ 
     Handle ajax form submit, return json.
     """
     if request.method == 'POST':
+        if is_student(request.user.username):
+            # TODO: display error message?
+            return HttpResponseRedirect(URL_INDEX)
+            
         # handle upload    
         form = UploadFileForm(request.POST, request.FILES)
         response_data = form.handle(request.user.username)
@@ -44,21 +50,29 @@ def upload_file(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     return HttpResponseRedirect(URL_INDEX)
 
-@login_required # TODO: faculty/staff only
+@login_required
 def confirm_upload_file(request):
     """
     Handle ajax confirm post.
     Rename temporary saved file to correct file name.
     """
     if request.method == 'POST':
+        if is_student(request.user.username):
+            # TODO: display error message?
+            return HttpResponseRedirect(URL_INDEX)
+            
         if request.POST.get('overwrite') == 'true':
             handle_confirmed_duplicated_file(request.user, request.POST.get('aid'), request.POST.get('new_mime_type'), request.POST.get('new_nice_type'))
         else:
             handle_canceled_duplicated_file(request.user, request.POST.get('aid'))
     return HttpResponseRedirect(URL_INDEX)
 
-@login_required  # TODO: faculty/staff only
+@login_required
 def manage_file(request):
+    if is_student(request.user.username):
+        # TODO: display error message?
+        return HttpResponseRedirect(URL_INDEX)
+        
     searchcat = request.GET.get('searchcat', '')
     searchtext = request.GET.get('searchtext', '')
     if searchtext != '':
@@ -72,15 +86,25 @@ def manage_file(request):
     m.update(update_searchcat(searchcat))
    
     m.update(csrf(request))
+    m.update({'dac_user':get_dac_user(request.user.username)})
+    
     return render(request, 'uploader/manage_file.html', m)
 
 @login_required
 def delete_one_file(request,aid):
+    if is_student(request.user.username):
+        # TODO: display error message?
+        return HttpResponseRedirect(URL_INDEX)
+        
     handle_delete_file(request.user,aid)
     return HttpResponseRedirect(URL_PERSONAL)
 
 @login_required
 def delete_selected_files(request):
+    if is_student(request.user.username):
+        # TODO: display error message?
+        return HttpResponseRedirect(URL_INDEX)
+        
     if request.method == 'POST':
         for k,v in request.POST.items():
             if v == 'on':

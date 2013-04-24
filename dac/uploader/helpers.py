@@ -1,6 +1,7 @@
 import os
 
 from dac.uploader.models import *
+from django.core.exceptions import ObjectDoesNotExist
 
 import logging
 logger = logging.getLogger(__name__)
@@ -8,6 +9,22 @@ logger = logging.getLogger(__name__)
 
 class PermissionError(Exception):
     pass
+    
+    
+def is_student(username):
+    try:
+        dac_user = DacUser.objects.get(user__username=username)
+    except ObjectDoesNotExist:
+        return False
+    
+    return dac_user.is_student()
+    
+def get_dac_user(username):
+    try:
+        dac_user = DacUser.objects.get(user__username=username)
+    except ObjectDoesNotExist:
+        return None
+    return dac_user    
 
 def handle_uploaded_file(file, asset, is_final):
     """
