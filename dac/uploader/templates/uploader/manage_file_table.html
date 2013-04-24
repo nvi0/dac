@@ -3,13 +3,13 @@
 <table id="fileTable" class="tablesorter table table-hover table-condensed">
 <thead>
 	<tr>
-		<td>Select</td>
-		<td>Title</td>
-		<td>Type</td>
-		<td>Modified</td>
-		<td>Owner</td>
-		<td>Tags</td>
-		<td></td>
+		<th style="width: 3%"></th>
+		<th style="width: 30%">Title</th>
+		<th style="width: 10%">Type</th>
+		<th style="width: 15%">Modified</th>
+		<th style="width: 10%">Owner</th>
+		<th style="width: 25%">Tags</th>
+		<th style="width: 5%"></th>
 	</tr>
 </thead>
 <tbody>
@@ -25,7 +25,7 @@
 		<td><a href="{% url 'dac.uploader.views.delete_one_file' fileinfo.aid %}" class="btn btn-mini btn-danger">remove</a><td>
 	</tr>
 {% endfor %}
-<input type="submit" value="Delete selected">
+<button class="btn" type="submit" >Remove selected</button>
 </form>
 </tbody>
 </table>

@@ -617,7 +617,9 @@ a:focus {
 .container {
   margin-right: auto;
   margin-left: auto;
-  *zoom: 1;
+  padding-left: 20px;
+  padding-right: 20px;
+    *zoom: 1;
 }
 
 .container:before,

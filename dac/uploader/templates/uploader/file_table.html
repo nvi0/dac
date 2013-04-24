@@ -1,14 +1,14 @@
 {% load url from future %} {# Prior to Django 1.5 #}
-<div id="pager" >
+<div id="pager" class="pull-right" >
 	<img src="http://mottie.github.com/tablesorter/addons/pager/icons/first.png" class="first"/>
 	<img src="http://mottie.github.com/tablesorter/addons/pager/icons/prev.png" class="prev"/>
 	<img src="http://mottie.github.com/tablesorter/addons/pager/icons/next.png" class="next"/>
 	<img src="http://mottie.github.com/tablesorter/addons/pager/icons/last.png" class="last"/>
-	<select class="pagesize" title="Select page size">
+	Page size
+	<select class="pagesize span1" title="Select page size">
 		<option selected="selected" value="10">10</option>
 		<option value="20">20</option>
-		<option value="30">30</option>
-		<option value="40">40</option>
+		<option value="50">50</option>
 	</select>
 </div>
 
