@@ -13,8 +13,8 @@ from models import *
 from helpers import *
 
 logger = logging.getLogger(__name__)
-URL_INDEX = '/viewfiles/'
-URL_PERSONAL = '/viewfiles/personal/'
+URL_INDEX = '/dac/'
+URL_PERSONAL = '/dac/personal/'
 
 @login_required
 def index(request):
@@ -35,14 +35,12 @@ def upload_file(request):
     if request.method == 'POST':
         # handle upload    
         form = UploadFileForm(request.POST, request.FILES)
-        newfile, aid, owner = form.handle(request.user.username)
-        response_data = {'is_success': (newfile != False), 'aid': aid}
-        if newfile:
+        response_data = form.handle(request.user.username)
+        if response_data['non_existed']:
             # include uploaded data into response_data
-            newfile_html = render_to_string("uploader/one_file_row.html", {'fileinfo': newfile})
+            newfile_html = render_to_string("uploader/one_file_row.html", {'fileinfo': response_data['asset']})
             response_data.update({'newfile': newfile_html })
-        else:
-            response_data.update({'is_existed_owner': request.user.username==owner})
+            response_data.pop('asset', None)
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     return HttpResponseRedirect(URL_INDEX)
 
@@ -54,7 +52,7 @@ def confirm_upload_file(request):
     """
     if request.method == 'POST':
         if request.POST.get('overwrite') == 'true':
-            handle_confirmed_duplicated_file(request.user, request.POST.get('aid'))
+            handle_confirmed_duplicated_file(request.user, request.POST.get('aid'), request.POST.get('new_mime_type'), request.POST.get('new_nice_type'))
         else:
             handle_canceled_duplicated_file(request.user, request.POST.get('aid'))
     return HttpResponseRedirect(URL_INDEX)

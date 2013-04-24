@@ -16,8 +16,12 @@ class DacUser(models.Model):
     position = models.CharField(max_length=1, choices=POSITIONS)
 
     def populate(self, new_username):
+        """
+        Populate new user. Default position: Student
+        """
         self.user = User.objects.get(username=new_username)
         self.user.save()
+        self.position = 'u'
         self.save()
 
     def __unicode__(self):
@@ -87,10 +91,16 @@ class Asset(models.Model):
             if keyword:
                 self.keywords.add(keyword[0])
             else:
+                # create new entry in table keyword
                 keyword = Keyword()
                 keyword.text = tag
                 keyword.save()
                 self.keywords.add(keyword)
+    
+    def populate_overwrite(self, new_mime_type, new_nice_type):
+        self.mime_type = new_mime_type
+        self.nice_type = new_nice_type
+        self.save()
 
     def str_filename(self):
         # to be given to file to be downloaded

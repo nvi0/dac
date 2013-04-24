@@ -9,7 +9,7 @@
 		<td>Modified</td>
 		<td>Owner</td>
 		<td>Tags</td>
-		<td>Delete</td>
+		<td></td>
 	</tr>
 </thead>
 <tbody>
@@ -22,7 +22,7 @@
 		<td>{{ fileinfo.updated }}</td>
 		<td>{{ fileinfo.uid }}</td>
 		<td>{{ fileinfo.str_keywords }}</td>
-		<td><a href="{% url 'dac.uploader.views.delete_one_file' fileinfo.aid %}">Del</a><td>
+		<td><a href="{% url 'dac.uploader.views.delete_one_file' fileinfo.aid %}" class="btn btn-mini btn-danger">remove</a><td>
 	</tr>
 {% endfor %}
 <input type="submit" value="Delete selected">

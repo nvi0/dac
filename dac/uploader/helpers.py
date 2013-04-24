@@ -27,7 +27,7 @@ def handle_uploaded_file(file, asset, is_final):
     if is_final:
         logger.info(' '.join(['* Sucessfully saved file:', asset.title]))
 
-def handle_confirmed_duplicated_file(user, aid):
+def handle_confirmed_duplicated_file(user, aid, new_mime_type, new_nice_type):
     """
     Rename temporary file name to correct name.
     """
@@ -54,7 +54,7 @@ def handle_confirmed_duplicated_file(user, aid):
     os.rename(tmp_file_name,full_file_name)
     logger.info(' '.join(['* Sucessfully saved file:', asset.title]))
     
-    # TODO: asset.updated
+    asset.populate_overwrite(new_mime_type, new_nice_type)
 
 def handle_canceled_duplicated_file(user, aid):
     """
@@ -79,6 +79,9 @@ def handle_canceled_duplicated_file(user, aid):
     logger.info(' '.join(['* Sucessfully removed tmp file:', asset.title]))
 
 def handle_delete_file(user, aid):
+    """
+    Delete stored file and entry in table asset.
+    """
     asset = Asset.objects.get(pk=aid)
     if not asset:
         return

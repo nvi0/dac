@@ -26,14 +26,14 @@ $.ajaxSetup({
 function showRequest(formData, jqForm, options) {
     // formData is an array; here we use $.param to convert it to a string to display it 
     // but the form plugin does this for you automatically when it submits the data 
-    var queryString = $.param(formData);
-
+    //var queryString = $.param(formData);
     // jqForm is a jQuery object encapsulating the form element.  To access the 
     // DOM element for the form do this: 
     // var formElement = jqForm[0]; 
 
     //alert('About to submit: \n\n' + queryString); 
 
+	show_upload_message("");
     // do validation
     return true;
 }
@@ -41,8 +41,8 @@ function showRequest(formData, jqForm, options) {
  // post-submit callback 
 
 function showResponse(json_obj, statusText, xhr, $form) {
-    //alert('status: ' + statusText + '\n\nresponseText: \n' + json_obj.is_success);
-    if (!json_obj.is_success) {
+    //alert('status: ' + statusText + '\n\nresponseText: \n' + json_obj.non_existed);
+    if (!json_obj.non_existed) {
         // ask to overwrite
 		if (json_obj.is_existed_owner) { //only ask to overwrite if current user is owner of the existed file
 	        show_upload_message("Existed file!");
@@ -53,16 +53,18 @@ function showResponse(json_obj, statusText, xhr, $form) {
 					model: true,
 					buttons: {
 						"Overwrite": function () {
-							$.post("{% url 'dac.uploader.views.confirm_upload_file' %}", {
+							$.post("upload/confirm/", {
 								overwrite: true,
-								aid: json_obj.aid
+								aid: json_obj.aid,
+								new_mime_type: json_obj.new_mime_type,
+								new_nice_type: json_obj.new_nice_type
 							});
 							$(this).dialog("close");
 							show_upload_message("File uploaded successfully!");
 							clear_upload_form();
 						},
 						Cancel: function () {
-							$.post("{% url 'dac.uploader.views.confirm_upload_file' %}", {
+							$.post("upload/confirm/", {
 								overwrite: false,
 								aid: json_obj.aid
 							});
@@ -91,7 +93,7 @@ function showResponse(json_obj, statusText, xhr, $form) {
 }
 
 function show_upload_message(message) {
-    document.getElementById("message").innerHTML = message;
+    document.getElementById('message').innerHTML = message;
 }
 function clear_upload_form() {
 	document.getElementById('id_title').value = "";
