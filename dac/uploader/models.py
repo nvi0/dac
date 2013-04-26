@@ -137,6 +137,10 @@ class Asset(models.Model):
         # et_<aid>
         return '_'.join(['et',str(self.aid)]) 
 
+    def get_edit_tag_id(self):
+        # etitle_<aid>
+        return '_'.join(['etitle',str(self.aid)]) 
+
 
 class Keyword(models.Model):
     kid = models.AutoField(primary_key=True)

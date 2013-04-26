@@ -24,16 +24,27 @@
 <script type="text/javascript">
 $(document).ready(function () {
 	init_upload();
-	var edit_options = {
+	
+	var edit_tag_options = {
 		tooltip: 'edit',
 		height: '14',
 		width: '140',
 		style: 'display: inline',
 		placeholder: '...', 
-		//submit:'ok',
+		//submit: 'ok',
 	};
-	$('.edit_tag').editable("edit_tag/", edit_options);
-
+	$('.edit_tag').editable("edit_tag/", edit_tag_options);
+	
+	var edit_title_options = {
+		tootlip: 'edit title',
+		height: '14',
+		width: '200',
+		style: 'display: inline',
+		//submit: 'ok',
+	}
+	$('.edit_title').editable(function(value, settings) {
+		// do validation: check if title is existed
+	}, edit_title_options);
 });
 </script>
 {% endblock %} <!-- endlast -->

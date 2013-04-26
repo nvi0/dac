@@ -17,7 +17,9 @@
 {% for fileinfo in file_list %}
 	<tr>
 		<td><input type="checkbox" name="{{ fileinfo.aid }}"></td>
-		<td>{{ fileinfo.title }}</td>
+		<td>
+			<div class="edit_title" id="{{ fileinfo.get_edit_title_id }}">{{ fileinfo.title }}</div>
+		</td>
 		<td>{{ fileinfo.nice_type }}</td>
 		<td>{{ fileinfo.updated }}</td>
 		<td>{{ fileinfo.uid }}</td>
