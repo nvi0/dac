@@ -1,7 +1,6 @@
 import os
 
 from dac.uploader.models import *
-from django.core.exceptions import ObjectDoesNotExist
 
 import logging
 logger = logging.getLogger(__name__)
@@ -24,7 +23,16 @@ def get_dac_user(username):
         dac_user = DacUser.objects.get(user__username=username)
     except ObjectDoesNotExist:
         return None
-    return dac_user    
+    return dac_user
+
+def get_asset(aid):
+    try:
+        asset = Asset.objects.get(pk=int(aid))
+    except ValueError, TypeError:
+        return None
+    except ObjectDoesNotExist:
+        return None
+    return asset
 
 def handle_uploaded_file(file, asset, is_final):
     """
@@ -48,7 +56,7 @@ def handle_confirmed_duplicated_file(user, aid, new_mime_type, new_nice_type):
     """
     Rename temporary file name to correct name.
     """
-    asset = Asset.objects.get(pk=aid)
+    asset = get_asset(aid)
     if not asset:
         return
     
@@ -77,7 +85,7 @@ def handle_canceled_duplicated_file(user, aid):
     """
     Remove temporary file.
     """
-    asset = Asset.objects.get(pk=aid)
+    asset = get_asset(aid)
     if not asset:
         return
     
@@ -99,7 +107,7 @@ def handle_delete_file(user, aid):
     """
     Delete stored file and entry in table asset.
     """
-    asset = Asset.objects.get(pk=aid)
+    asset = get_asset(aid)
     if not asset:
         return
 

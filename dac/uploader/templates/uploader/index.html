@@ -3,84 +3,64 @@
 {% block page_title %}DAC Home{% endblock %}
 
 {% block content %}
-	<p>Welcome, {{ user.username }}!</p>
-    <ul class="nav nav-tabs">
-    	<li class="active">
-    		<a href="#">Home</a>
-		</li>
-		{% if dac_user.is_power %}
-			<li><a href="{% url 'dac.uploader.views.manage_file' %}">Manage Files</a></li>
-		{% endif %}
-		
-		<li><a href="{% url 'djangocas.views.logout' %}">Log out</a></li>
-    </ul>
-	{% include "uploader/searchbox.html" %}
-	{% include "uploader/file_table.html" %}
+<p>Welcome, {{ user.username }}!</p>
+<ul class="nav nav-tabs">
+	<li class="active">
+    	<a href="#">Home</a>
+	</li>
 	{% if dac_user.is_power %}
-		{% include "uploader/upload_file.html" %}
+	<li><a href="{% url 'dac.uploader.views.manage_file' %}">Manage Files</a></li>
 	{% endif %}
-{% endblock %}
+		
+	<li><a href="{% url 'djangocas.views.logout' %}">Log out</a></li>
+</ul>
+
+{% include "uploader/searchbox.html" %}
+{% include "uploader/file_table.html" %}
+
+{% if dac_user.is_power %}
+{% include "uploader/upload_file.html" %}
+{% endif %}
+
+{% endblock %} <!-- endcontent -->
 
 {% block last %}
-	<script type="text/javascript">
-	$(document).ready(function () {
+<script type="text/javascript">
+$(document).ready(function () {
 		
-	    $("#fileTable")
-	        .tablesorter()
-	        .tablesorterPager({
-	        container: $("#pager"),
-	        positionFixed: false
-	    })
-	        .trigger('sorton', [
-	        [
-	            [5, 1],
-	        ]
-	    ]); //descending asset id
+	$("#fileTable")
+	.tablesorter()
+	.tablesorterPager({
+		container: $("#pager"),
+		positionFixed: false
+	})
+	.trigger('sorton', [
+	[
+	[5, 1],
+	]
+	]); //descending asset id
 
-	    $("#fileUpload").accordion({
-	        collapsible: true,
-	        header: "h5",
-	        active: false,
-	        animate: 120
-	    });
-	    //----
-	    // enable upload button
-	    $("input:file").change(function () {
-	        if ($(this).val()) {
-	            $("input:submit").attr('disabled', false);
-	        }
-	    });
-	    //----
-	    var options = {
-	        beforeSubmit: showRequest, // pre-submit callback 
-	        success: showResponse, // post-submit callback 
-	        dataType: 'json' // 'xml', 'script', or 'json' (expected server response type) 
-	    };
-	    //$("#uploadForm").ajaxForm(options); // either using ajaxForm or ajaxSubmit, not both
-	    $("#uploadForm").submit(function () {
-	        $(this).ajaxSubmit(options);
-	        return false;
-	    });
-	});
-	</script>
-	{% comment %}
-		tablesorterPager.defaults = {
-			size: 10,
-			offset: 0,
-			page: 0,
-			totalRows: 0,
-			totalPages: 0,
-			container: null,
-			cssNext: '.next',
-			cssPrev: '.prev',
-			cssFirst: '.first',
-			cssLast: '.last',
-			cssPageDisplay: '.pagedisplay',
-			cssPageSize: '.pagesize',
-			seperator: "/",
-			positionFixed: true,
-			appender: this.appender
-		};
-	{% endcomment %}
+	init_upload();
+});
+</script>
+{% comment %}
+tablesorterPager.defaults = {
+	size: 10,
+	offset: 0,
+	page: 0,
+	totalRows: 0,
+	totalPages: 0,
+	container: null,
+	cssNext: '.next',
+	cssPrev: '.prev',
+	cssFirst: '.first',
+	cssLast: '.last',
+	cssPageDisplay: '.pagedisplay',
+	cssPageSize: '.pagesize',
+	seperator: "/",
+	positionFixed: true,
+	appender: this.appender
+};
+{% endcomment %}
 
-{% endblock %}
+{% endblock %} <!-- endlast -->

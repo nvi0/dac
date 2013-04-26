@@ -2,6 +2,7 @@
 {% load url from future %} {# Prior to Django 1.5 #}
 {% block page_title %}DAC File Manager{% endblock %}
 
+
 {% block content %}
 
 <p>Welcome, {{ user.username }}!</p>
@@ -16,4 +17,23 @@
 {% include "uploader/searchbox.html" %}
 {% include "uploader/manage_file_table.html" %}
 
-{% endblock %}
+{% endblock %} <!-- endcontent -->
+
+{% block last %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.jeditable.js"></script>
+<script type="text/javascript">
+$(document).ready(function () {
+	init_upload();
+	var edit_options = {
+		tooltip: 'edit',
+		height: '14',
+		width: '140',
+		style: 'display: inline',
+		placeholder: '...', 
+		//submit:'ok',
+	};
+	$('.edit_tag').editable("edit_tag/", edit_options);
+
+});
+</script>
+{% endblock %} <!-- endlast -->

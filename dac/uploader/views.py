@@ -121,7 +121,7 @@ def send_one_file(request,aid):
     memory at once. The FileWrapper will turn the file object into an           
     iterator for chunks of 8KB.                                                 
     """
-    asset = Asset.objects.get(pk=aid)
+    asset = get_asset(aid)
     if not asset:
         # raise not found message
         return HttpResponseRedirect(URL_INDEX)
@@ -132,3 +132,26 @@ def send_one_file(request,aid):
     response['Content-Length'] = os.path.getsize(filename)
     response['Content-Disposition'] = 'attachment; filename={nice_filename}'.format(nice_filename=asset.str_filename())
     return response
+
+@login_required
+def edit_tag(request):
+    """
+    Handle ajax post to edit tag, format:  id=elements_id&value=user_edited_content
+    """
+    if is_student(request.user.username):
+        # TODO: display error message?
+        return HttpResponseRedirect(URL_INDEX)
+        
+    if request.method != 'POST':
+        return HttpResponseRedirect(URL_PERSONAL)
+    
+    aid = request.POST.get('id','')[3:] #ex: et_183
+    new_value = request.POST.get('value','')
+    
+    asset = get_asset(aid)
+    if not asset:
+        logger.warning('Request to edit tags for non-existed file, aid= {aid}'.format(aid=aid))
+        return HttpResponseRedirect(URL_PERSONAL)
+    
+    asset.set_keywords(new_value)
+    return HttpResponse(asset.str_keywords(), content_type="text/plain")

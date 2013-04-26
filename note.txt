@@ -7,3 +7,6 @@ src="http://mottie.github.io/tablesorter/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" 
 src="http://tablesorter.com/addons/pager/jquery.tablesorter.pager.js"></script>
 
+http://www.appelsiini.net/download/jquery.jeditable.js
+http://malsup.github.com/jquery.form.js 
+http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css 

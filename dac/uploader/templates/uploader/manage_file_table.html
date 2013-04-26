@@ -21,7 +21,9 @@
 		<td>{{ fileinfo.nice_type }}</td>
 		<td>{{ fileinfo.updated }}</td>
 		<td>{{ fileinfo.uid }}</td>
-		<td>{{ fileinfo.str_keywords }}</td>
+		<td>
+			<div class="edit_tag" id="{{ fileinfo.get_edit_tag_id }}">{{ fileinfo.str_keywords }}</div>
+		</td>
 		<td><a href="{% url 'dac.uploader.views.delete_one_file' fileinfo.aid %}" class="btn btn-mini btn-danger">remove</a><td>
 	</tr>
 {% endfor %}

@@ -1,51 +1,54 @@
-$.ajaxSetup({
-    beforeSend: function (xhr, settings) {
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie != '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = jQuery.trim(cookies[i]);
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-        if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-            // Only send the token to relative URLs i.e. locally.
-            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-        }
-    }
-});
- // pre-submit callback 
-
-function showRequest(formData, jqForm, options) {
-    // formData is an array; here we use $.param to convert it to a string to display it 
-    // but the form plugin does this for you automatically when it submits the data 
-    //var queryString = $.param(formData);
-    // jqForm is a jQuery object encapsulating the form element.  To access the 
-    // DOM element for the form do this: 
-    // var formElement = jqForm[0]; 
-
-    //alert('About to submit: \n\n' + queryString); 
-
-	show_upload_message("");
-    // do validation
-    return true;
+function init_upload() {
+	$("#fileUpload").accordion({
+		collapsible: true,
+		header: "h5",
+		active: false,
+		animate: 120
+	});
+	//----
+	// enable upload button
+	$("input:file").change(function () {
+		if ($(this).val()) {
+			$("input:submit").attr('disabled', false);
+		}
+	});
+	//----
+	var options = {
+		beforeSubmit: pre_upload, // pre-submit callback 
+		success: post_upload, // post-submit callback 
+		dataType: 'json' // 'xml', 'script', or 'json' (expected server response type) 
+	};
+	$("#uploadForm").submit(function () {
+		$(this).ajaxSubmit(options);
+		return false;
+	});
 }
 
- // post-submit callback 
+// pre-submit callback 
 
-function showResponse(json_obj, statusText, xhr, $form) {
-    //alert('status: ' + statusText + '\n\nresponseText: \n' + json_obj.non_existed);
-    if (!json_obj.non_existed) {
-        // ask to overwrite
+function pre_upload(formData, jqForm, options) {
+	// formData is an array; here we use $.param to convert it to a string to display it 
+	// but the form plugin does this for you automatically when it submits the data 
+	//var queryString = $.param(formData);
+	// jqForm is a jQuery object encapsulating the form element.  To access the 
+	// DOM element for the form do this: 
+	// var formElement = jqForm[0]; 
+
+	//alert('About to submit: \n\n' + queryString); 
+
+	show_upload_message("");
+	// do validation
+	return true;
+}
+
+// post-submit callback 
+
+function post_upload(json_obj, statusText, xhr, $form) {
+	//alert('status: ' + statusText + '\n\nresponseText: \n' + json_obj.non_existed);
+	if (!json_obj.non_existed) {
+		// ask to overwrite
 		if (json_obj.is_existed_owner) { //only ask to overwrite if current user is owner of the existed file
-	        show_upload_message("Existed file!");
+			show_upload_message("Existed file!");
 			$(function () {
 				$("#dialog-confirm").dialog({
 					resizable: false,
@@ -72,32 +75,33 @@ function showResponse(json_obj, statusText, xhr, $form) {
 							show_upload_message("Canceled!");
 						}
 					}
-            	});
-        	});
+				});
+			});
 		} else {
-	        show_upload_message("Existed file! You don't have permission to overwrite.");
+			show_upload_message("Existed file! You don't have permission to overwrite.");
 		}
 
-    } else {
-        // display success message; add row to table
-        show_upload_message("File uploaded successfully!");
+	} else {
+		// display success message; add row to table
+		show_upload_message("File uploaded successfully!");
 		clear_upload_form();
 
-        var row = json_obj.newfile; //,	$row = $(row), resort = true;
-        $('#fileTable')
-        .find('tbody').prepend(row)
-		.trigger('update');
-        //.trigger('addRows', [row, resort]);
-        //.trigger('sorton',[ [[5,1],] ]); //descending asset id
-    }
+		var row = json_obj.newfile; //,	$row = $(row), resort = true;
+		$('#fileTable')
+			.find('tbody').prepend(row)
+			.trigger('update');
+			//.trigger('sorton',[ [[5,1],] ]); //descending asset id
+			//.trigger('addRows', [row, resort]);
+	}
 }
 
 function show_upload_message(message) {
-    document.getElementById('message').innerHTML = message;
+	document.getElementById('message').innerHTML = message;
 }
+
 function clear_upload_form() {
 	document.getElementById('id_title').value = "";
 	document.getElementById('id_file').value = "";
 	document.getElementById('id_tags').value = "";
-    $("input:submit").attr('disabled', true);
+	$("input:submit").attr('disabled', true);
 }

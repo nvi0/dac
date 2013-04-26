@@ -2,6 +2,8 @@ import mimetypes
 from datetime import date
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
+
 from dac.settings import FILE_DIR
 
 POSITIONS = (
@@ -91,25 +93,27 @@ class Asset(models.Model):
 
         self.uid = DacUser.objects.get(user__username=username)
         self.save()
-        # get/set tags
-        delim = ',' if ',' in info[
-            'tags'] else None  # split by either space or comma
-        tags = [tag.strip() for tag in info['tags'].split(delim)]
+        self.set_keywords(info['tags'])
+    
+    def populate_overwrite(self, new_mime_type, new_nice_type):
+        self.mime_type = new_mime_type
+        self.nice_type = new_nice_type
+        self.save()
+    
+    def set_keywords(self, new_keywords):
+        # remove any old keywords
+        self.keywords.clear()
+        
+        # set new keywords
+        delim = ',' if ',' in new_keywords else None  # split by either space or comma
+        tags = [tag.strip() for tag in new_keywords.split(delim)]
         for tag in tags:
             keyword = Keyword.objects.filter(text=tag)
             if keyword:
                 self.keywords.add(keyword[0])
             else:
                 # create new entry in table keyword
-                keyword = Keyword()
-                keyword.text = tag
-                keyword.save()
-                self.keywords.add(keyword)
-    
-    def populate_overwrite(self, new_mime_type, new_nice_type):
-        self.mime_type = new_mime_type
-        self.nice_type = new_nice_type
-        self.save()
+                self.keywords.create(text=tag)
 
     def str_filename(self):
         # to be given to file to be downloaded
@@ -127,6 +131,10 @@ class Asset(models.Model):
 
     def gen_file_path(self):
         return '/'.join([FILE_DIR, str(self.submitted.year), str(self.submitted.month)])
+    
+    def get_edit_tag_id(self):
+        # et_<aid>
+        return '_'.join(['et',str(self.aid)]) 
 
 
 class Keyword(models.Model):
