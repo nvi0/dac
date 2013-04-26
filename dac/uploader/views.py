@@ -54,7 +54,7 @@ def upload_file(request):
 def confirm_upload_file(request):
     """
     Handle ajax confirm post.
-    Rename temporary saved file to correct file name.
+    Rename temporary saved file to correct file name OR remove temporary file.
     """
     if request.method == 'POST':
         if is_student(request.user.username):
