@@ -52,7 +52,7 @@ def handle_uploaded_file(file, asset, is_final):
     if is_final:
         logger.info(' '.join(['* Sucessfully saved file:', asset.title]))
 
-def handle_confirmed_duplicated_file(user, aid, new_mime_type, new_nice_type):
+def handle_confirmed_duplicated_file(user, aid, new_mime_type, new_nice_type, new_keywords):
     """
     Rename temporary file name to correct name.
     """
@@ -79,7 +79,7 @@ def handle_confirmed_duplicated_file(user, aid, new_mime_type, new_nice_type):
     os.rename(tmp_file_name,full_file_name)
     logger.info(' '.join(['* Sucessfully saved file:', asset.title]))
     
-    asset.populate_overwrite(new_mime_type, new_nice_type)
+    asset.populate_overwrite(new_mime_type, new_nice_type, new_keywords)
 
 def handle_canceled_duplicated_file(user, aid):
     """

@@ -42,9 +42,13 @@ class UploadFileForm(forms.Form):
                 if info['asset'].uid.user.username == username:
                     # Store temporary file
                     handle_uploaded_file(info['file'], info['asset'], is_final=False)
-                return {'non_existed': False, 'aid': info['asset'].aid, 'owner': info['asset'].uid.user.username,
-                        'new_mime_type': info['new_mime_type'], 'new_nice_type': info['new_nice_type'],
-                        'is_existed_owner': info['asset'].uid.user.username == username}
+                return {'non_existed': False,
+                        'aid': info['asset'].aid,
+                        'owner': info['asset'].uid.user.username,
+                        'new_mime_type': info['new_mime_type'],
+                        'new_nice_type': info['new_nice_type'],
+                        'is_existed_owner': info['asset'].uid.user.username == username,
+                        'new_keywords': info['tags']}
         
             # success adding new asset
             asset = Asset()

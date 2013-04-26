@@ -60,7 +60,8 @@ function post_upload(json_obj, statusText, xhr, $form) {
 								overwrite: true,
 								aid: json_obj.aid,
 								new_mime_type: json_obj.new_mime_type,
-								new_nice_type: json_obj.new_nice_type
+								new_nice_type: json_obj.new_nice_type,
+								new_keywords: json_obj.new_keywords
 							});
 							$(this).dialog("close");
 							show_upload_message("File uploaded successfully!");

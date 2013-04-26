@@ -95,10 +95,11 @@ class Asset(models.Model):
         self.save()
         self.set_keywords(info['tags'])
     
-    def populate_overwrite(self, new_mime_type, new_nice_type):
+    def populate_overwrite(self, new_mime_type, new_nice_type, new_keywords):
         self.mime_type = new_mime_type
         self.nice_type = new_nice_type
         self.save()
+        self.set_keywords(new_keywords)
     
     def set_keywords(self, new_keywords):
         # remove any old keywords

@@ -62,7 +62,11 @@ def confirm_upload_file(request):
             return HttpResponseRedirect(URL_INDEX)
             
         if request.POST.get('overwrite') == 'true':
-            handle_confirmed_duplicated_file(request.user, request.POST.get('aid'), request.POST.get('new_mime_type'), request.POST.get('new_nice_type'))
+            handle_confirmed_duplicated_file(request.user, 
+                                             request.POST.get('aid'), 
+                                             request.POST.get('new_mime_type'), 
+                                             request.POST.get('new_nice_type'), 
+                                             request.POST.get('new_keywords'))
         else:
             handle_canceled_duplicated_file(request.user, request.POST.get('aid'))
     return HttpResponseRedirect(URL_INDEX)
