@@ -13,9 +13,10 @@
 	</li>
 	<li><a href="{% url 'djangocas.views.logout' %}">Log out</a></li>
 </ul>
-
 {% include "uploader/searchbox.html" %}
+<p> Hint: click on any title or tag to edit.</p>
 {% include "uploader/manage_file_table.html" %}
+<p id="msg"></p>
 
 {% endblock %} <!-- endcontent -->
 
@@ -44,6 +45,18 @@ $(document).ready(function () {
 	}
 	$('.edit_title').editable(function(value, settings) {
 		// do validation: check if title is existed
+		$.post("edit_title/", 
+		       {new_title: value, id: this.id},
+		       function(result) { 
+				   if (result.saved) {
+				       $('#' + result.id).html(result.new_title);
+				       $('#msg').html("");
+				   } else {
+				       $('#' + result.id).html(result.old_title);
+				       $('#msg').html("Existed title. Please choose another one.");
+				   }
+			   });
+		return ""; //temporary when waiting for the validation
 	}, edit_title_options);
 });
 </script>

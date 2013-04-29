@@ -10,4 +10,5 @@ urlpatterns = patterns('',
                        url(r'^personal/delete/$', views.delete_selected_files),
                        url(r'^download/(?P<aid>\d+)/$', views.send_one_file),
                        url(r'^personal/edit_tag/$', views.edit_tag),
+                       url(r'^personal/edit_title/$', views.edit_title),
                        )

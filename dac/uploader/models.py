@@ -116,6 +116,15 @@ class Asset(models.Model):
                 # create new entry in table keyword
                 self.keywords.create(text=tag)
 
+    def set_title(self, new_title):
+        if self.title == new_title:
+            return True
+        if not Asset.objects.get_by_exact_title(new_title):
+            self.title = new_title
+            self.save()
+            return True
+        return False
+
     def str_filename(self):
         # to be given to file to be downloaded
         # <title.replace(' ','_')>.<nice_type>
@@ -137,7 +146,7 @@ class Asset(models.Model):
         # et_<aid>
         return '_'.join(['et',str(self.aid)]) 
 
-    def get_edit_tag_id(self):
+    def get_edit_title_id(self):
         # etitle_<aid>
         return '_'.join(['etitle',str(self.aid)]) 
 

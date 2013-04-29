@@ -37,7 +37,7 @@ def upload_file(request):
     if request.method == 'POST':
         if is_student(request.user.username):
             # TODO: display error message?
-            return HttpResponseRedirect(URL_INDEX)
+            return
             
         # handle upload    
         form = UploadFileForm(request.POST, request.FILES)
@@ -48,7 +48,6 @@ def upload_file(request):
             response_data.update({'newfile': newfile_html })
             response_data.pop('asset', None)
         return HttpResponse(json.dumps(response_data), content_type="application/json")
-    return HttpResponseRedirect(URL_INDEX)
 
 @login_required
 def confirm_upload_file(request):
@@ -59,7 +58,7 @@ def confirm_upload_file(request):
     if request.method == 'POST':
         if is_student(request.user.username):
             # TODO: display error message?
-            return HttpResponseRedirect(URL_INDEX)
+            return
             
         if request.POST.get('overwrite') == 'true':
             handle_confirmed_duplicated_file(request.user, 
@@ -69,7 +68,6 @@ def confirm_upload_file(request):
                                              request.POST.get('new_keywords'))
         else:
             handle_canceled_duplicated_file(request.user, request.POST.get('aid'))
-    return HttpResponseRedirect(URL_INDEX)
 
 @login_required
 def manage_file(request):
@@ -144,10 +142,10 @@ def edit_tag(request):
     """
     if is_student(request.user.username):
         # TODO: display error message?
-        return HttpResponseRedirect(URL_INDEX)
+        return
         
     if request.method != 'POST':
-        return HttpResponseRedirect(URL_PERSONAL)
+        return
     
     aid = request.POST.get('id','')[3:] #ex: et_183
     new_value = request.POST.get('value','')
@@ -155,7 +153,37 @@ def edit_tag(request):
     asset = get_asset(aid)
     if not asset:
         logger.warning('Request to edit tags for non-existed file, aid= {aid}'.format(aid=aid))
-        return HttpResponseRedirect(URL_PERSONAL)
+        return
+    # TODO: check owner
     
     asset.set_keywords(new_value)
     return HttpResponse(asset.str_keywords(), content_type="text/plain")
+
+@login_required
+def edit_title(request):
+    """
+    Handle ajax post check for existed title
+    """
+    if is_student(request.user.username):
+        # TODO: display error message?
+        return
+        
+    if request.method != 'POST':
+        return
+    
+    aid = request.POST.get('id','')[7:] #ex: etitle_183
+    new_title = request.POST.get('new_title','')
+    
+    asset = get_asset(aid)
+    if not asset:
+        logger.warning('Request to edit title for non-existed file, aid= {aid}'.format(aid=aid))
+        return
+
+    m = {'id': request.POST.get('id',''), 'new_title': new_title, 'old_title': asset.title}
+    # TODO: check owner
+    if asset.set_title(new_title):
+        m.update({'saved':True,'existed':False})
+        return HttpResponse(json.dumps(m), content_type="application/json")
+        
+    m.update({'saved':False,'existed':True})
+    return HttpResponse(json.dumps(m), content_type="application/json")
