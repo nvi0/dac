@@ -79,7 +79,7 @@ function post_upload(json_obj, statusText, xhr, $form) {
 				});
 			});
 		} else {
-			show_upload_message("Existed file! You don't have permission to overwrite.");
+			show_upload_message("Existed file! You don't have permission to overwrite. Please choose another title.");
 		}
 
 	} else {
