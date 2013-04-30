@@ -49,11 +49,7 @@ class AssetManager(models.Manager):
         elif searchcat == 'us':
             return super(AssetManager, self).get_query_set().filter(uid__user__username__icontains=searchtext)
         elif searchcat == 'ta':
-            result = set()
-            searchkeywords = Keyword.objects.filter(text__icontains=searchtext)
-            for searchkeyword in searchkeywords:
-                result.update(searchkeyword.asset_set.all())
-            return list(result)
+            return super(AssetManager, self).get_query_set().filter(keywords__text__icontains=searchtext)
         else:
             return super(AssetManager, self).get_query_set()
 
