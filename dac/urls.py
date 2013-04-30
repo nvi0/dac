@@ -7,6 +7,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
                        url(r'^$', views.home),
+                       url(r'^cas_redirect/$', views.cas_redirect),
 
                        url(r'^admin/', include(admin.site.urls)),
                        url(r'^dac/', include('dac.uploader.urls')),

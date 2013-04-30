@@ -15,8 +15,12 @@ from helpers import *
 logger = logging.getLogger(__name__)
 URL_INDEX = '/dac/'
 URL_PERSONAL = '/dac/personal/'
+URL_INTROPAGE = '/dac/login/'
 
-@login_required
+def intropage(request):
+    return render(request, 'uploader/intropage.html')
+
+@login_required(login_url=URL_INTROPAGE, redirect_field_name='')
 def index(request):
     handle_new_user(request.user)
     m = get_file_list(request)

@@ -1,26 +1,26 @@
-#header
-{
-	background-color: rgb(106, 127, 16);
-}
-#curpage
-{
-	display: inline;
-}
 table.tablesorter {
-	border: 1px solid #3D3D3D;
+	font-size: 12px;
+	background-color: #4D4D4D;
+	width: 1024px;
+	border: 1px solid #000;
 }
 table.tablesorter th {
 	text-align: left;
 	padding: 5px;
+	background-color: #6E6E6E;
 }
 table.tablesorter td {
+	color: #FFF;
+	padding: 5px;
 }
 table.tablesorter .even {
+	background-color: #3D3D3D;
 }
 table.tablesorter .odd {
+	background-color: #6E6E6E;
 }
-table.tablesorter .tablesorter-header {
-	background-image: url(../img/bg.png);
+table.tablesorter .header {
+	background-image: url(bg.png);
 	background-repeat: no-repeat;
 	border-left: 1px solid #FFF;
 	border-right: 1px solid #000;
@@ -29,11 +29,11 @@ table.tablesorter .tablesorter-header {
 	padding-top: 8px;
 	height: auto;
 }
-table.tablesorter .tablesorter-headerAsc {
-	background-image: url(../img/asc.png);
+table.tablesorter .headerSortUp {
+	background-image: url(asc.png);
 	background-repeat: no-repeat;
 }
-table.tablesorter .tablesorter-headerDesc {
-	background-image: url(../img/desc.png);
+table.tablesorter .headerSortDown {
+	background-image: url(desc.png);
 	background-repeat: no-repeat;
 }

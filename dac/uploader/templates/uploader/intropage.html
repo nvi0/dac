@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% load url from future %} {# Prior to Django 1.5 #}
+{% block page_title %}DAC Home{% endblock %}
+
+{% block content %}
+<p>Department of Psychology - Digital Assets Curation Project</p>
+<a href="{% url 'dac.views.cas_redirect' %}">Log In</a>
+{% endblock %} <!-- endcontent -->
+
