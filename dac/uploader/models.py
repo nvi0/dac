@@ -37,6 +37,16 @@ class DacUser(models.Model):
         Rule: either Faculty or Staff
         """
         return self.position == 'f' or self.position == 's'
+    
+    def f_selected(self):
+        return 'selected' if self.position == 'f' else ''
+    def s_selected(self):
+        return 'selected' if self.position == 's' else ''
+    def u_selected(self):
+        return 'selected' if self.position == 'u' else ''
+    
+    def name_positionselect(self):
+        return 'ps_{uid}'.format(uid=self.user.id)
         
 
 class AssetManager(models.Manager):
@@ -144,7 +154,8 @@ class Asset(models.Model):
 
     def get_edit_title_id(self):
         # etitle_<aid>
-        return '_'.join(['etitle',str(self.aid)]) 
+        return '_'.join(['etitle',str(self.aid)])
+    
 
 
 class Keyword(models.Model):

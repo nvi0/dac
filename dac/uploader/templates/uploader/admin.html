@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load url from future %} {# Prior to Django 1.5 #}
+{% block page_title %}DAC Home{% endblock %}
+
+{% block content %}
+<p>Welcome, {{ user.username }}!</p>
+<ul class="nav nav-tabs">
+	<li><a href="{% url 'dac.uploader.views.index' %}">Home</a></li>
+	{% if dac_user.is_power %}
+	<li><a href="{% url 'dac.uploader.views.manage_file' %}">Manage Files</a></li>
+	{% endif %}
+	<li class="active"><a href="{% url 'dac.uploader.views.admin' %}">Manage Users</a></li>
+	<li><a href="{% url 'djangocas.views.logout' %}">Log out</a></li>
+</ul>
+<!-- endnavbar -->
+<form method="POST" action="{% url 'dac.uploader.views.admin_edit_positions' %}">{% csrf_token %}
+	<table id="userTable" class="tablesorter table table-condensed table-bordered">
+		<thead><tr>
+			<th style="width: 3%">ID</th>
+			<th style="width: 20%">First</th>
+			<th style="width: 20%">Last</th>
+			<th style="width: 20%">Username</th>
+			<th style="width: 30%">Role</th>
+		</tr></thead>
+		<tbody>
+			{% for userinfo in user_list %}
+			<tr>
+				<td>{{ userinfo.user.id }}</td>
+				<td>{{ userinfo.user.first_name }}</td>
+				<td>{{ userinfo.user.last_name }}</td>
+				<td>{{ userinfo.user.username }}</td>
+				<td>
+					<select name={{ userinfo.name_positionselect }} class="select select-mini">
+						<option {{ userinfo.f_selected }} value="f">Faculty</option>
+						<option {{ userinfo.s_selected }} value="s">Staff</option>
+						<option {{ userinfo.u_selected }} value="u">Student</option>
+					</select>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<button class="btn btn-small" type="submit" >Save</button>
+</form>
+
+{% endblock %} <!-- endcontent -->
+
+{% block last %}
+{% endblock %} <!-- endlast -->

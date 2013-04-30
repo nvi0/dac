@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 URL_INDEX = '/dac/'
 URL_PERSONAL = '/dac/personal/'
 URL_INTROPAGE = '/dac/login/'
+URL_ADMIN = '/dac/admin/'
 
 def intropage(request):
     return render(request, 'uploader/intropage.html')
@@ -191,3 +192,13 @@ def edit_title(request):
         
     m.update({'saved':False,'existed':True})
     return HttpResponse(json.dumps(m), content_type="application/json")
+
+@login_required
+def admin(request):
+    m = {'user_list': DacUser.objects.order_by('position')} # conveniently 'u' is after 'f' and 's'
+    m.update({'dac_user':get_dac_user(request.user.username)})
+    return render(request, 'uploader/admin.html', m)
+
+@login_required
+def admin_edit_positions(request):
+    return HttpResponseRedirect(URL_ADMIN)

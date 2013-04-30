@@ -3,6 +3,8 @@ from dac.uploader import views
 
 urlpatterns = patterns('',
                        url(r'^$', views.index, name='index'),
+                       url(r'^admin/$', views.admin),
+                       url(r'^admin/edit_positions/$', views.admin_edit_positions),
                        url(r'^upload/$', views.upload_file),
                        url(r'^login/$', views.intropage),
                        url(r'^upload/confirm/$', views.confirm_upload_file),
