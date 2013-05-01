@@ -26,7 +26,7 @@ def index(request):
     handle_new_user(request.user)
     m = get_file_list(request)
     form = UploadFileForm()
-    m.update(csrf(request))
+    m.update(csrf(request)) #TODO: seems like ajaxpreset in main.js covers this?
     m.update({'form': form})
     m.update(update_searchcat(request.GET.get('searchcat', '')))
     
@@ -41,7 +41,6 @@ def upload_file(request):
     """
     if request.method == 'POST':
         if is_student(request.user.username):
-            # TODO: display error message?
             return
             
         # handle upload    
@@ -62,7 +61,6 @@ def confirm_upload_file(request):
     """
     if request.method == 'POST':
         if is_student(request.user.username):
-            # TODO: display error message?
             return
             
         if request.POST.get('overwrite') == 'true':
@@ -77,7 +75,6 @@ def confirm_upload_file(request):
 @login_required
 def manage_file(request):
     if is_student(request.user.username):
-        # TODO: display error message?
         return HttpResponseRedirect(URL_INDEX)
         
     searchcat = request.GET.get('searchcat', '')
@@ -100,7 +97,6 @@ def manage_file(request):
 @login_required
 def delete_one_file(request,aid):
     if is_student(request.user.username):
-        # TODO: display error message?
         return HttpResponseRedirect(URL_INDEX)
         
     handle_delete_file(request.user,aid)
@@ -109,7 +105,6 @@ def delete_one_file(request,aid):
 @login_required
 def delete_selected_files(request):
     if is_student(request.user.username):
-        # TODO: display error message?
         return HttpResponseRedirect(URL_INDEX)
         
     if request.method == 'POST':
@@ -146,7 +141,6 @@ def edit_tag(request):
     Handle ajax post to edit tag, format:  id=elements_id&value=user_edited_content
     """
     if is_student(request.user.username):
-        # TODO: display error message?
         return
         
     if request.method != 'POST':
@@ -170,7 +164,6 @@ def edit_title(request):
     Handle ajax post check for existed title
     """
     if is_student(request.user.username):
-        # TODO: display error message?
         return
         
     if request.method != 'POST':
@@ -193,12 +186,19 @@ def edit_title(request):
     m.update({'saved':False,'existed':True})
     return HttpResponse(json.dumps(m), content_type="application/json")
 
-@login_required
+@login_required #TODO: admin only
 def admin(request):
-    m = {'user_list': DacUser.objects.order_by('position')} # conveniently 'u' is after 'f' and 's'
+#    m = {'user_list': DacUser.objects.order_by('position')} # conveniently 'u' is after 'f' and 's'
+    m = get_user_list(request)
     m.update({'dac_user':get_dac_user(request.user.username)})
     return render(request, 'uploader/admin.html', m)
 
-@login_required
+@login_required #TODO: admin only
 def admin_edit_positions(request):
+    if request.method != 'POST':
+        return HttpResponseRedirect(URL_ADMIN)
+    print request.POST
+    for k,v in request.POST.items():
+        if 'ps_' in k: # process new position
+            save_new_position(int(k[]),v)
     return HttpResponseRedirect(URL_ADMIN)

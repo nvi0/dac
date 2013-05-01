@@ -12,8 +12,33 @@ POSITIONS = (
     ('u', 'Student'),
 )
 CATEGORIES = {'ti': 'title', 'ty': 'mime_type', 'us': 'uid', 'ta': 'kid'}
+USER_CATEGORIES = {'u': 'username', 'n': 'name', 'r': 'role'}
 
+
+class DacUserManager(models.Manager):
+    # note: by default MySql string comparison is case-insensitive
+    def get_search_result(self, searchcat, searchtext):
+        if searchtext != '':
+            if searchcat == 'u':
+                return super(DacUserManager, self).get_query_set().filter(user__username__icontains=searchtext)
+            elif searchcat == 'n':
+                # TODO: untested cuz no data
+                return (super(DacUserManager, self).get_query_set().filter(user__first_name__icontains=searchtext) | super(DacUserManager, self).get_query_set().filter(user__last_name__icontains=searchtext))
+            elif searchcat == 'r':
+                searchtext = searchtext.title()
+                position_abbr = 'xyz'
+                for abbr,p in POSITIONS:
+                    if p == searchtext:
+                        position_abbr = abbr
+                        break
+                return super(DacUserManager, self).get_query_set().filter(position=position_abbr)
+        #default
+        return super(DacUserManager, self).get_query_set()
+    
+        
 class DacUser(models.Model):
+    objects = DacUserManager()
+    
     user = models.OneToOneField(User)
     position = models.CharField(max_length=1, choices=POSITIONS)
 

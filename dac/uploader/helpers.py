@@ -154,4 +154,29 @@ def handle_new_user(new_user):
     logger.info('Creating new user logged in from CAS: {username}'.format(username=new_user.username))
     dac_user = DacUser()
     dac_user.populate(new_user.username)
+    
+def update_usersearchcat(usersearchcat):
+    d = {'u_selected':'', 'n_selected':'', 'r_selected': ''}
+    if usersearchcat != '':
+        d.update({''.join([usersearchcat,'_selected']): 'selected'})
+    return d
+    
 
+def get_user_list(request):
+    m = {}
+    
+    searchcat = request.GET.get('usersearchcat', '')
+    searchtext = request.GET.get('usersearchtext', '')
+    if searchtext != '':
+        logger.info(' '.join(['* ADMIN SEARCH', searchcat, searchtext]))
+        m.update({'usersearchcat': searchcat, 'usersearchtext': searchtext})
+    m.update(update_usersearchcat(searchcat))
+    
+    user_list = DacUser.objects.get_search_result(searchcat, searchtext)
+    
+    m.update({'user_list': user_list})
+    
+    return m
+
+def save_new_position(uid, new_p):
+    
