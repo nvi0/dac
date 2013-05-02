@@ -200,5 +200,8 @@ def admin_edit_positions(request):
     print request.POST
     for k,v in request.POST.items():
         if 'ps_' in k: # process new position
-            save_new_position(int(k[]),v)
+            try:
+                save_new_position(int(k[3:]),v)
+            except ValueError:
+                pass
     return HttpResponseRedirect(URL_ADMIN)

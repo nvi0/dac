@@ -57,8 +57,11 @@
 			{% endfor %}
 		</tbody>
 	</table>
-	<button id="savePosition" class="btn btn-small" type="submit" >Save</button>
+	&nbsp;<button id="savePosition" class="btn btn-primary pull-right hide" type="submit" >Save changes</button>
+	<button id="resetPosition" class="btn btn-info pull-right hide">Cancel</button>
+
 </form>
+
 <!-- enduserTable -->
 {% endblock %} <!-- endcontent -->
 
@@ -67,11 +70,17 @@
 // Mark changed roles
 function MarkAsChanged() {
 	$(this).addClass("changed");
+	$("#savePosition").removeClass("hide");
+	$("#resetPosition").removeClass("hide");
 }
-$(".position").blur(MarkAsChanged).change(MarkAsChanged);
+$(".position").change(MarkAsChanged);
 // Disable unchanged roles to submit only changed roles.
 $("#savePosition").click(function(){
 	$(".position:not(.changed)").attr("disabled", "disabled");
+});
+$("#resetPosition").click(function(){
+	location.reload(true); // TODO: reload only roles
+	return false;
 });
 /*
 $(document).ready(function () {

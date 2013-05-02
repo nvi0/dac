@@ -20,10 +20,10 @@ class DacUserManager(models.Manager):
     def get_search_result(self, searchcat, searchtext):
         if searchtext != '':
             if searchcat == 'u':
-                return super(DacUserManager, self).get_query_set().filter(user__username__icontains=searchtext)
+                return super(DacUserManager, self).get_query_set().filter(user__username__icontains=searchtext).order_by('position')
             elif searchcat == 'n':
                 # TODO: untested cuz no data
-                return (super(DacUserManager, self).get_query_set().filter(user__first_name__icontains=searchtext) | super(DacUserManager, self).get_query_set().filter(user__last_name__icontains=searchtext))
+                return (super(DacUserManager, self).get_query_set().filter(user__first_name__icontains=searchtext) | super(DacUserManager, self).get_query_set().filter(user__last_name__icontains=searchtext)).order_by('position')
             elif searchcat == 'r':
                 searchtext = searchtext.title()
                 position_abbr = 'xyz'
@@ -31,7 +31,7 @@ class DacUserManager(models.Manager):
                     if p == searchtext:
                         position_abbr = abbr
                         break
-                return super(DacUserManager, self).get_query_set().filter(position=position_abbr)
+                return super(DacUserManager, self).get_query_set().filter(position=position_abbr).order_by('position')
         #default
         return super(DacUserManager, self).get_query_set()
     
@@ -53,6 +53,13 @@ class DacUser(models.Model):
 
     def __unicode__(self):
         return self.user.username
+        
+    def set_position(self, new_p):
+        if new_p in [POSITIONS[i][0] for i in range(len(POSITIONS))]:
+            self.position = new_p
+            self.save()
+        else:
+            logger.warning('Attempt to set user role to strange value, value= {new_p}'.format(new_p=new_p))
     
     def is_student(self):
         return self.position == 'u'

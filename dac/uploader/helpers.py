@@ -179,4 +179,11 @@ def get_user_list(request):
     return m
 
 def save_new_position(uid, new_p):
-    
+    try:
+        dac_user = DacUser.objects.get(user__id=uid)
+    except ObjectDoesNotExist:
+        logger.warning('Attempt to change role of non-existent user, uid= {uid}'.format(uid=uid))
+        return
+    else:
+        dac_user.set_position(new_p)
+        print dac_user.position

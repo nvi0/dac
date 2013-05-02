@@ -1,3 +1,9 @@
+.select-mini {
+	font-size: 14px;
+	height: 28px;
+	width: 150px;
+	margin-bottom: 0px;
+}
 #header
 {
 	background-color: rgb(106, 127, 16);
