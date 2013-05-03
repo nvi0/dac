@@ -186,4 +186,8 @@ LOGIN_URL = '/login/'
 # LOGIN_REDIRECT_URL = '/viewfiles/'
 FILE_DIR = MEDIA_ROOT
 
+LDAP_URL = "ldap://ldap-batch.oit.pdx.edu"
+LDAP_BASE_DN = 'dc=pdx,dc=edu'
+
+
 from local_settings import *

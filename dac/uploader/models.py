@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
 from dac.settings import FILE_DIR
+from ldap_getter import get_user_info
 
 POSITIONS = (
     ('f', 'Faculty'),
@@ -46,10 +47,16 @@ class DacUser(models.Model):
         """
         Populate new user. Default position: Faculty (for testing)
         """
+        user_info = get_user_info(new_username)
+        if not user_info:
+            return False
         self.user = User.objects.get(username=new_username)
+        self.user.first_name = user_info['first_name']
+        self.user.last_name = user_info['last_name']
         self.user.save()
         self.position = 'f'
         self.save()
+        return True
 
     def __unicode__(self):
         return self.user.username
