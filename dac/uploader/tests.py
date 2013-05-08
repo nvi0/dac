@@ -1,7 +1,11 @@
-from dac.uploader.models import *
+import urllib2, urllib
 
+from django.test.client import Client
 from django.test import TestCase
 
+from dac.uploader.models import *
+
+LABRAT = {'username': '', 'password':''} # any pdx account to pass CAS authentication
 
 class ModelsTest(TestCase):
     def setUp(self):
@@ -60,4 +64,31 @@ class ModelsTest(TestCase):
         self.assertQuerysetEqual(Asset.objects.all(),['<Asset: asset1>','<Asset: asset3>'],ordered=False)
         self.assertQuerysetEqual(Asset.objects.get_by_user('f1'),['<Asset: asset1>'])
         self.assertFalse(Keyword.objects.get(pk=1).asset_set.all())
+
+class ViewsTest(TestCase):
+    """
+        django.test.client to test inner urls, views matching and templates rendering.
+        urllib2 to log in at CAS server.
+    """
+    def test_all(self):
+        client = Client()
+        self.assertEqual(client.get('/').status_code, 302)
+        self.assertEqual(client.get('/dac/').status_code, 302)
+        self.assertEqual(client.get('/dac/login/').status_code, 200) # intro page that contains link to login
+        
+        r = client.get('/login/')
+        self.assertEqual(r.status_code, 302)
+        try:
+            cas_login_url = r._headers['location'][1]
+        except KeyError:
+            self.fail()
+            
+        if LABRAT.get('username','') == '':
+            print('No pdx account provided for testing. Halting ViewsTest.')
+            return
+        
+        # cas_login_page = urllib2.urlopen(cas_login_url).read()
+        login_req = urllib2.Request(cas_login_url)
+        d = LABRAT
+        login_req.add_data(urllib.urlencode(d))
         
