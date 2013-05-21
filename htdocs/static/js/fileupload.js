@@ -97,12 +97,12 @@ function post_upload(json_obj, statusText, xhr, $form) {
 }
 
 function show_upload_message(message) {
-	document.getElementById('message').innerHTML = message;
+	$('#message').html(message);
 }
 
 function clear_upload_form() {
-	document.getElementById('id_title').value = "";
-	document.getElementById('id_file').value = "";
-	document.getElementById('id_tags').value = "";
+	$('#id_title').val("");
+	$('#id_file').val("");
+	$('#id_tags').val("");
 	$("input:submit").attr('disabled', true);
 }
