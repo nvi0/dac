@@ -1,0 +1,20 @@
+{% load url from future %} {# Prior to Django 1.5 #}
+<div id="createUser">
+	<h5>Create New User</h5>
+	<form id="createUserForm" method="post" action="{% url 'dac.uploader.views.admin_create_user' %}">
+		{% csrf_token %}
+		<table>
+			<tr><th><label for="id_username">Username:</label></th><td><input id="id_username" type="text" name="username" maxlength="150" size="30"/></td></tr>
+			<tr><th><label for="id_position">Position:</label></th>
+				<td>
+					<select name="position" class="select select-mini">
+						<option value="f">Faculty</option>
+						<option value="s">Staff</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+		<input type="submit" value="Create" id="Save" disabled/>
+		<p id="message"><br /></p>
+	</form>
+</div>

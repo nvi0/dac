@@ -11,6 +11,7 @@ from django.core.servers.basehttp import FileWrapper
 from forms import UploadFileForm
 from models import *
 from helpers import *
+import ldap_getter
 
 logger = logging.getLogger(__name__)
 URL_INDEX = '/dac/'
@@ -23,7 +24,7 @@ def intropage(request):
 
 @login_required(login_url=URL_INTROPAGE, redirect_field_name='')
 def index(request):
-    handle_new_user(request.user)
+    handle_new_user(request.user.username)
     m = get_file_list(request)
     form = UploadFileForm()
     m.update(csrf(request)) #TODO: seems like ajaxpreset in main.js covers this?
@@ -205,3 +206,34 @@ def admin_edit_positions(request):
             except ValueError:
                 pass
     return HttpResponseRedirect(URL_ADMIN)
+
+@login_required #TODO: admin only
+def admin_create_user(request):
+    """
+    Handle ajax post.
+    """
+    if is_student(request.user.username):
+        return
+    if request.method != 'POST':
+        return
+    
+    new_username = request.POST['username']
+    if new_username == '':
+        return
+    
+    position = request.POST.get('position','')
+    if position not in ('f','s'):
+        return
+
+    print(request.POST)
+    
+    if DacUser.objects.filter(user__username=new_username):
+        return HttpResponse(json.dumps({'success':False, 'reason':'existed'}), content_type="application/json")
+    
+    user_info = ldap_getter.get_user_info(new_username)
+    if user_info == None:
+        return HttpResponse(json.dumps({'success':False, 'reason':'no_ldap_record'}), content_type="application/json")
+
+    handle_new_user(new_username, user_info, request.POST['position'])
+    return HttpResponse(json.dumps({'success':True}), content_type="application/json")
+    

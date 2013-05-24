@@ -43,18 +43,21 @@ class DacUser(models.Model):
     user = models.OneToOneField(User)
     position = models.CharField(max_length=1, choices=POSITIONS)
 
-    def populate(self, new_username):
+    def populate(self, new_username, user_info=None, position=None):
         """
-        Populate new user. Default position: Faculty (for testing)
+        Populate new user. Default position: Student
         """
-        user_info = get_user_info(new_username)
+        if user_info == None:
+            user_info = get_user_info(new_username)
         if not user_info:
             return False
-        self.user = User.objects.get(username=new_username)
+                
+        users = User.objects.filter(username=new_username)
+        self.user = User.objects.create_user(new_username, user_info['mail'], 'anything') if len(users) == 0 else users[0]
         self.user.first_name = user_info['first_name']
         self.user.last_name = user_info['last_name']
         self.user.save()
-        self.position = 'f'
+        self.position = position if position != None else 'u'
         self.save()
         return True
 

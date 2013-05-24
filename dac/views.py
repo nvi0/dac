@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 def home(request):
     return HttpResponseRedirect('/dac/')
 
-@login_required(redirect_field_name='')
+@login_required()
 def cas_redirect(request):
     return HttpResponseRedirect('/dac/')
     

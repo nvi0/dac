@@ -63,9 +63,13 @@
 </form>
 
 <!-- enduserTable -->
+<!-- createuser -->
+{% include "uploader/create_user.html" %}
+<!-- endcreateuser -->
 {% endblock %} <!-- endcontent -->
 
 {% block last %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/create_user.js"></script>
 <script type="text/javascript">
 // Mark changed roles
 function MarkAsChanged() {
@@ -81,6 +85,9 @@ $("#savePosition").click(function(){
 $("#resetPosition").click(function(){
 	location.reload(true); // TODO: reload only roles
 	return false;
+});
+$(document).ready(function () {
+	init_create_user();
 });
 /*
 $(document).ready(function () {

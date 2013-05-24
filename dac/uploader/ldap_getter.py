@@ -2,6 +2,9 @@ import ldap
 from dac.settings import LDAP_URL, LDAP_BASE_DN
 
 def get_user_info(username):
+    if username == '':
+        return None
+    
     ld = ldap.initialize(LDAP_URL)
     ld.simple_bind_s()
     results = ld.search_s(LDAP_BASE_DN, ldap.SCOPE_SUBTREE, 'uid={u}'.format(u=username))

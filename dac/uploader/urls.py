@@ -5,6 +5,8 @@ urlpatterns = patterns('',
                        url(r'^$', views.index, name='index'),
                        url(r'^admin/$', views.admin),
                        url(r'^admin/edit_positions/$', views.admin_edit_positions),
+                       url(r'^admin/create_user/$', views.admin_create_user),
+                       
                        url(r'^upload/$', views.upload_file),
                        url(r'^login/$', views.intropage),
                        url(r'^upload/confirm/$', views.confirm_upload_file),
@@ -14,4 +16,5 @@ urlpatterns = patterns('',
                        url(r'^download/(?P<aid>\d+)/$', views.send_one_file),
                        url(r'^personal/edit_tag/$', views.edit_tag),
                        url(r'^personal/edit_title/$', views.edit_title),
+                       
                        )
