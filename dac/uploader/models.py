@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
+import helpers
 from dac.settings import FILE_DIR
 from ldap_getter import get_user_info
 
@@ -141,13 +142,16 @@ class Asset(models.Model):
 
         self.uid = DacUser.objects.get(user__username=username)
         self.save()
-        self.set_keywords(info['tags'])
+        tags = self.set_keywords(info['tags'])
+        helpers.update_predefined_search_list([self.nice_type], [username], tags)
     
     def populate_overwrite(self, new_mime_type, new_nice_type, new_keywords):
         self.mime_type = new_mime_type
         self.nice_type = new_nice_type
         self.save()
-        self.set_keywords(new_keywords)
+        tags = self.set_keywords(new_keywords)
+        helpers.update_predefined_search_list([new_nice_type], [self.uid.user.username], tags)
+
     
     def set_keywords(self, new_keywords):
         # remove any old keywords
@@ -163,6 +167,7 @@ class Asset(models.Model):
             else:
                 # create new entry in table keyword
                 self.keywords.create(text=tag)
+        return tags
 
     def set_title(self, new_title):
         if self.title == new_title:

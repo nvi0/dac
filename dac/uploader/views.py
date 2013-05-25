@@ -25,11 +25,11 @@ def intropage(request):
 @login_required(login_url=URL_INTROPAGE, redirect_field_name='')
 def index(request):
     handle_new_user(request.user.username)
-    m = get_file_list(request)
+    m = get_predefined_search_lists()
+    m.update(get_file_list(request))
     form = UploadFileForm()
     m.update(csrf(request)) #TODO: seems like ajaxpreset in main.js covers this?
     m.update({'form': form})
-    m.update(update_searchcat(request.GET.get('searchcat', '')))
     
     #c = RequestContext(request, {'dac_user':get_dac_user(request.user.username)})
     m.update({'dac_user':get_dac_user(request.user.username)})

@@ -1,14 +1,37 @@
 <div id="searchbox">
 	<form method="get">
-		<select id="id_searchcat" name="searchcat" class="span2">
-			<option {{ ti_selected }} value="ti">Title</option>
-			<option {{ ty_selected }} value="ty">Type</option>
-			<option {{ us_selected }} value="us">Owner</option>
-			<option {{ ta_selected }} value="ta">Tag</option>
-		</select>
-		<div class="input-append">
-			<input id="id_searchtext" name="searchtext" type="text" class="span3"/>
-			<button type="submit" class="btn btn-primary"> Go </button>
+		<div id="searchtitle">
+			<div class="input-append">
+				<input id="id_searchtext" name="searchtext" type="text" class="span3"/>
+				<button type="submit" class="btn btn-primary"> Go </button>
+			</div>
+		</div>
+		<div id="searchmeta">
+			<select id="id_searchtype" name="searchtype" class="span2">
+				<option value="">Type</option>
+				{% for type in type_list %}
+				<option value="{{ type }}">{{ type }}</option>
+				{% endfor %}
+			</select>
+			<select id="id_searchowner" name="searchowner" class="span2">
+				<option value="">Owner</option>
+				{% for owner in owner_list %}
+				<option value="{{ owner }}">{{ owner }}</option>
+				{% endfor %}
+			</select>
+			<select id="id_searchtag" name="searchtag" class="span2">
+				<option value="">Tag</option>
+				{% for tag in tag_list %}
+				<option value="{{ tag }}">{{ tag }}</option>
+				{% endfor %}
+			</select>
 		</div>
 	</form>
 </div>
+
+
+<!--
+				<option {{ ty_selected }} value="ty">Type</option>
+				<option {{ us_selected }} value="us">Owner</option>
+				<option {{ ta_selected }} value="ta">Tag</option>
+-->

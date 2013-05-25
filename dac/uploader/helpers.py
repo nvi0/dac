@@ -1,7 +1,10 @@
 import os
+import json
 
-from dac.uploader.models import *
+from dac.settings import FILE_DIR
+from dac.settings import STATICFILES_DIRS
 
+import models
 import logging
 logger = logging.getLogger(__name__)
 
@@ -12,7 +15,7 @@ class PermissionError(Exception):
     
 def is_student(username):
     try:
-        dac_user = DacUser.objects.get(user__username=username)
+        dac_user = models.DacUser.objects.get(user__username=username)
     except ObjectDoesNotExist:
         return False
     
@@ -20,14 +23,14 @@ def is_student(username):
     
 def get_dac_user(username):
     try:
-        dac_user = DacUser.objects.get(user__username=username)
+        dac_user = models.DacUser.objects.get(user__username=username)
     except ObjectDoesNotExist:
         return None
     return dac_user
 
 def get_asset(aid):
     try:
-        asset = Asset.objects.get(pk=int(aid))
+        asset = models.Asset.objects.get(pk=int(aid))
     except ValueError, TypeError:
         return None
     except ObjectDoesNotExist:
@@ -136,7 +139,7 @@ def get_file_list(request):
         logger.info(' '.join(['* SEARCH', searchcat, searchtext]))
         m.update({'searchcat': searchcat, 'searchtext': searchtext})
     
-    file_list = Asset.objects.get_search_result(searchcat, searchtext)
+    file_list = models.Asset.objects.get_search_result(searchcat, searchtext)
     
     m.update({'file_list': file_list})
     
@@ -149,10 +152,10 @@ def update_searchcat(searchcat):
     return d
     
 def handle_new_user(new_username, user_info=None, position=None):
-    if DacUser.objects.filter(user__username=new_username):
+    if models.DacUser.objects.filter(user__username=new_username):
         return # nothing to do
     logger.info('Creating new user: {username}'.format(username=new_username))
-    dac_user = DacUser()
+    dac_user = models.DacUser()
     
     dac_user.populate(new_username, user_info, position)
 
@@ -174,7 +177,7 @@ def get_user_list(request):
         m.update({'usersearchcat': searchcat, 'usersearchtext': searchtext})
     m.update(update_usersearchcat(searchcat))
     
-    user_list = DacUser.objects.get_search_result(searchcat, searchtext)
+    user_list = models.DacUser.objects.get_search_result(searchcat, searchtext)
     
     m.update({'user_list': user_list})
     
@@ -182,10 +185,53 @@ def get_user_list(request):
 
 def save_new_position(uid, new_p):
     try:
-        dac_user = DacUser.objects.get(user__id=uid)
+        dac_user = models.DacUser.objects.get(user__id=uid)
     except ObjectDoesNotExist:
         logger.warning('Attempt to change role of non-existent user, uid= {uid}'.format(uid=uid))
         return
     else:
         dac_user.set_position(new_p)
         print dac_user.position
+
+def get_predefined_search_lists():
+    try:
+        with open(os.path.join(STATICFILES_DIRS[0],'appdata'),'r') as f:
+            return json.load(f)
+    except IOError:
+        # assume no asset yet
+        m = {'type_list':[], 'owner_list':[], 'tag_list':[]}
+        with open(os.path.join(STATICFILES_DIRS[0],'appdata'),'w') as f:
+            json.dump(m,f)
+        return m
+
+def update_predefined_search_list(types, owners, tags):
+    m = get_predefined_search_lists()
+    for type in types:
+        if type not in m['type_list']:
+            m['type_list'].append(type)
+    for owner in owners:
+        if owner not in m['owner_list']:
+            m['owner_list'].append(owner)
+    for tag in tags:
+        if tag not in m['tag_list']:
+            m['tag_list'].append(tag)
+    with open(os.path.join(STATICFILES_DIRS[0],'appdata'),'w') as f:
+        json.dump(m,f)
+
+def init_predefined_search_list():
+    """
+    If there are assets already, run this once.
+    """
+    m = {'type_list':[], 'owner_list':[], 'tag_list':[]}
+    assets = models.Asset.objects.all()
+    for asset in models.Asset.objects.all():
+        if asset.nice_type not in m['type_list']:
+            m['type_list'].append(asset.nice_type)
+        username = asset.uid.user.username
+        if username not in m['owner_list']:
+            m['owner_list'].append(username)
+        for tag in asset.keywords.all():
+            if tag.text not in m['tag_list']:
+                m['tag_list'].append(tag.text)
+    with open(os.path.join(STATICFILES_DIRS[0],'appdata'),'w') as f:
+        json.dump(m,f)
