@@ -37,6 +37,7 @@ class DacUserManager(models.Manager):
         #default
         return super(DacUserManager, self).get_query_set()
     
+    
         
 class DacUser(models.Model):
     objects = DacUserManager()
@@ -105,6 +106,9 @@ class AssetManager(models.Manager):
             return super(AssetManager, self).get_query_set().filter(keywords__text__icontains=searchtext)
         else:
             return super(AssetManager, self).get_query_set()
+            
+    def get_search_result2(self, searchtext, searchtype, searchowner, searchtag):
+        return super(AssetManager, self).get_query_set().filter(title__icontains=searchtext, nice_type__icontains=searchtype, uid__user__username__icontains=searchowner, keywords__text__icontains=searchtag)
 
     def get_by_user(self, username):
         return super(AssetManager, self).get_query_set().filter(uid__user__username__iexact=username)

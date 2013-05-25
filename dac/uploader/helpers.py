@@ -133,13 +133,15 @@ def handle_delete_file(user, aid):
     
 def get_file_list(request):
     m = {}
-    searchcat = request.GET.get('searchcat', '')
     searchtext = request.GET.get('searchtext', '')
+    searchtype = request.GET.get('searchtype', '')
+    searchowner = request.GET.get('searchowner', '')
+    searchtag = request.GET.get('searchtag', '')
     if searchtext != '':
-        logger.info(' '.join(['* SEARCH', searchcat, searchtext]))
-        m.update({'searchcat': searchcat, 'searchtext': searchtext})
+        logger.info('* SEARCH {text} type={type} owner={owner} tag={tag}'.format(text=searchtext, type=searchtype, owner=searchowner, tag=searchtag))#(' '.join(['* SEARCH',  searchtext]))
     
-    file_list = models.Asset.objects.get_search_result(searchcat, searchtext)
+    #file_list = models.Asset.objects.get_search_result(searchcat, searchtext)
+    file_list = models.Asset.objects.get_search_result2(searchtext, searchtype, searchowner, searchtag)
     
     m.update({'file_list': file_list})
     
