@@ -2,7 +2,6 @@ import os
 import json
 
 from dac.settings import FILE_DIR
-from dac.settings import STATICFILES_DIRS
 
 import models
 import logging
@@ -196,44 +195,4 @@ def save_new_position(uid, new_p):
         print dac_user.position
 
 def get_predefined_search_lists():
-    try:
-        with open(os.path.join(STATICFILES_DIRS[0],'appdata'),'r') as f:
-            return json.load(f)
-    except IOError:
-        # assume no asset yet
-        m = {'type_list':[], 'owner_list':[], 'tag_list':[]}
-        with open(os.path.join(STATICFILES_DIRS[0],'appdata'),'w') as f:
-            json.dump(m,f)
-        return m
-
-def update_predefined_search_list(types, owners, tags):
-    m = get_predefined_search_lists()
-    for type in types:
-        if type not in m['type_list']:
-            m['type_list'].append(type)
-    for owner in owners:
-        if owner not in m['owner_list']:
-            m['owner_list'].append(owner)
-    for tag in tags:
-        if tag not in m['tag_list']:
-            m['tag_list'].append(tag)
-    with open(os.path.join(STATICFILES_DIRS[0],'appdata'),'w') as f:
-        json.dump(m,f)
-
-def init_predefined_search_list():
-    """
-    If there are assets already, run this once.
-    """
-    m = {'type_list':[], 'owner_list':[], 'tag_list':[]}
-    assets = models.Asset.objects.all()
-    for asset in models.Asset.objects.all():
-        if asset.nice_type not in m['type_list']:
-            m['type_list'].append(asset.nice_type)
-        username = asset.uid.user.username
-        if username not in m['owner_list']:
-            m['owner_list'].append(username)
-        for tag in asset.keywords.all():
-            if tag.text not in m['tag_list']:
-                m['tag_list'].append(tag.text)
-    with open(os.path.join(STATICFILES_DIRS[0],'appdata'),'w') as f:
-        json.dump(m,f)
+    return models.Asset.objects.get_predefined_search_list()

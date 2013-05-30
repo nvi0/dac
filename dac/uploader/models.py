@@ -119,6 +119,12 @@ class AssetManager(models.Manager):
     def get_by_exact_title(self, title):
         return super(AssetManager, self).get_query_set().filter(title__exact=title)
 
+    def get_predefined_search_list(self):
+        return {'type_list':super(AssetManager, self).get_query_set().values_list('nice_type', flat=True).order_by('nice_type').distinct(),
+                'owner_list':super(AssetManager, self).get_query_set().values_list('uid__user__username', flat=True).order_by('uid__user__username').distinct(),
+                'tag_list':super(AssetManager, self).get_query_set().values_list('keywords__text', flat=True).order_by('keywords__text').distinct()}
+    
+    
 class Asset(models.Model):
     objects = AssetManager()
 
@@ -147,14 +153,14 @@ class Asset(models.Model):
         self.uid = DacUser.objects.get(user__username=username)
         self.save()
         tags = self.set_keywords(info['tags'])
-        helpers.update_predefined_search_list([self.nice_type], [username], tags)
+        #helpers.update_predefined_search_list([self.nice_type], [username], tags)
     
     def populate_overwrite(self, new_mime_type, new_nice_type, new_keywords):
         self.mime_type = new_mime_type
         self.nice_type = new_nice_type
         self.save()
         tags = self.set_keywords(new_keywords)
-        helpers.update_predefined_search_list([new_nice_type], [self.uid.user.username], tags)
+        #helpers.update_predefined_search_list([new_nice_type], [self.uid.user.username], tags)
 
     
     def set_keywords(self, new_keywords):
