@@ -12,6 +12,15 @@
 	display: none;
 	border-radius: 0px 0px 0px 0px;
 }
+
+
+
+div#dynacloud {
+    font-size:4px;
+}    
+div#dynacloud a span{
+    font-size:1em;
+}    
 </style>
 <p>Welcome, {{ user.username }}!</p>
 <ul class="nav nav-tabs">
@@ -27,7 +36,8 @@
 
 {% include "uploader/searchbox.html" %}
 {% include "uploader/file_table.html" %}
-
+{% include "uploader/tagcloud.html" %}
+<br/>
 {% if dac_user.is_power %}
 {% include "uploader/upload_file.html" %}
 {% endif %}
@@ -35,6 +45,8 @@
 {% endblock %} <!-- endcontent -->
 
 {% block last %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.dynacloud.js"></script>
+
 <script type="text/javascript">
 $(document).ready(function () {
 		
