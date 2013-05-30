@@ -4,9 +4,13 @@
 
 {% block content %}
 <style>
-#searchtitle{
-	width:300px;
+#id_searchtext,#extra_filters{
+	
 	float:left;
+}
+#id_searchtype, #id_searchowner, #id_searchtag {
+	display: none;
+	border-radius: 0px 0px 0px 0px;
 }
 </style>
 <p>Welcome, {{ user.username }}!</p>
@@ -47,11 +51,23 @@ $(document).ready(function () {
 	]); //descending asset id
 
 	init_upload();
-});
+	$('#id_tags').watermark('<space or comma separated>');
+	$('#id_title').watermark('<optional>');
+	$('#id_searchtext').watermark('search...');
 
-$('#id_tags').watermark('<space or comma separated>');
-$('#id_title').watermark('<optional>');
-$('#id_searchtext').watermark('search...');
+
+
+});
+$(function() {
+	
+	$("#filters").click( function() {
+		$('#id_searchtype').show();
+		$('#id_searchowner').show();
+		$('#id_searchtag').show();
+		$(this).hide();
+		return false;
+	});
+});
 </script>
 {% comment %}
 tablesorterPager.defaults = {

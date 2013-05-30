@@ -144,6 +144,7 @@ def get_file_list(request):
     file_list = models.Asset.objects.get_search_result2(searchtext, searchtype, searchowner, searchtag)
     
     m.update({'file_list': file_list})
+    m.update({'searchtext':searchtext, 'searchtype':searchtype, 'searchowner': searchowner, 'searchtag':searchtag})
     
     return m
     

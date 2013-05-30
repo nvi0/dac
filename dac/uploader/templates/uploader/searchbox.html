@@ -1,31 +1,33 @@
 <div id="searchbox">
 	<form method="get">
 		<div id="searchtitle">
-			<div class="input-append">
-				<input id="id_searchtext" name="searchtext" type="text" class="span3"/>
+			<div class="input-append" >
+				<input id="id_searchtext" name="searchtext" type="text" class="span3" value="{{ searchtext }}"/>
+				<div id="extra_filters">
+					<button type="button" id="filters" class="btn" {% if searchtype != "" or searchowner != "" or searchtag != ""  %} style="display: none;"{% endif %}>Filters &raquo;</button>
+					<select id="id_searchtype" name="searchtype" class="span2" {% if searchtype != "" or searchowner != "" or searchtag != "" %} style="display: inline;"{% endif %}>
+						<option value="">-- file type --</option>
+						{% for type in type_list %}
+						<option {% if type == searchtype %} selected {% endif %} value="{{ type }}">{{ type }}</option>
+						{% endfor %}
+					</select>
+					<select id="id_searchowner" name="searchowner" class="span2" {% if searchtype != "" or searchowner != "" or searchtag != "" %} style="display: inline;"{% endif %}>
+						<option value="">-- owner --</option>
+						{% for owner in owner_list %}
+						<option {% if owner == searchowner %} selected {% endif %} value="{{ owner }}">{{ owner }}</option>
+						{% endfor %}
+					</select>
+					<select id="id_searchtag" name="searchtag" class="span2" {% if searchtype != "" or searchowner != "" or searchtag != "" %} style="display: inline;"{% endif %}>
+						<option value="">-- tag --</option>
+						{% for tag in tag_list %}
+						<option {% if tag == searchtag %} selected {% endif %} value="{{ tag }}">{{ tag }}</option>
+						{% endfor %}
+					</select>
+				</div>	
 				<button type="submit" class="btn btn-primary"> Go </button>
 			</div>
 		</div>
-		<div id="searchmeta">
-			<select id="id_searchtype" name="searchtype" class="span2">
-				<option value="">-- file type --</option>
-				{% for type in type_list %}
-				<option value="{{ type }}">{{ type }}</option>
-				{% endfor %}
-			</select>
-			<select id="id_searchowner" name="searchowner" class="span2">
-				<option value="">-- owner --</option>
-				{% for owner in owner_list %}
-				<option value="{{ owner }}">{{ owner }}</option>
-				{% endfor %}
-			</select>
-			<select id="id_searchtag" name="searchtag" class="span2">
-				<option value="">-- tag --</option>
-				{% for tag in tag_list %}
-				<option value="{{ tag }}">{{ tag }}</option>
-				{% endfor %}
-			</select>
-		</div>
+		
 	</form>
 </div>
 
