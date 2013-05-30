@@ -27,6 +27,7 @@ def index(request):
     handle_new_user(request.user.username)
     m = get_predefined_search_lists()
     m.update(get_file_list(request))
+    m.update(get_all_tags())
     form = UploadFileForm()
     m.update(csrf(request)) #TODO: seems like ajaxpreset in main.js covers this?
     m.update({'form': form})

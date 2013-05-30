@@ -196,3 +196,6 @@ def save_new_position(uid, new_p):
 
 def get_predefined_search_lists():
     return models.Asset.objects.get_predefined_search_list()
+    
+def get_all_tags():
+    return {'alltags':models.Asset.objects.get_all_tags()}

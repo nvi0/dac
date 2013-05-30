@@ -16,10 +16,14 @@
 
 
 div#dynacloud {
-    font-size:4px;
+    font-size:6px;
+	padding-top:10px;
+	padding-left:30px;
+	padding-right:30px;
 }    
 div#dynacloud a span{
     font-size:1em;
+	padding: 3px;
 }    
 </style>
 <p>Welcome, {{ user.username }}!</p>
@@ -38,6 +42,8 @@ div#dynacloud a span{
 {% include "uploader/file_table.html" %}
 {% include "uploader/tagcloud.html" %}
 <br/>
+<br/>
+
 {% if dac_user.is_power %}
 {% include "uploader/upload_file.html" %}
 {% endif %}

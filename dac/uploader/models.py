@@ -122,7 +122,10 @@ class AssetManager(models.Manager):
     def get_predefined_search_list(self):
         return {'type_list':super(AssetManager, self).get_query_set().values_list('nice_type', flat=True).order_by('nice_type').distinct(),
                 'owner_list':super(AssetManager, self).get_query_set().values_list('uid__user__username', flat=True).order_by('uid__user__username').distinct(),
-                'tag_list':super(AssetManager, self).get_query_set().values_list('keywords__text', flat=True).order_by('keywords__text').distinct()}
+                'tag_list':filter(None,super(AssetManager, self).get_query_set().values_list('keywords__text', flat=True).order_by('keywords__text').distinct())}
+    
+    def get_all_tags(self):
+        return filter(None,super(AssetManager, self).get_query_set().values_list('keywords__text', flat=True).order_by('keywords__text'))
     
     
 class Asset(models.Model):
