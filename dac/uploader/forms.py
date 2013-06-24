@@ -7,9 +7,9 @@ logger = logging.getLogger(__name__)
 
 
 class UploadFileForm(forms.Form):
-    title = forms.CharField(required=False, label='Title', max_length=30)
+    title = forms.CharField(required=False, label='Title', max_length=100)
     file = forms.FileField(label='File')
-    tags = forms.CharField(required=False, label='Tags', max_length=30)
+    tags = forms.CharField(required=False, label='Tags', max_length=100)
     
     def clean(self): # implicitly invoked by self.is_valid()
         cleaned_data = super(UploadFileForm, self).clean()
