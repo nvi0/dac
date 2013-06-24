@@ -24,7 +24,10 @@ div#dynacloud {
 div#dynacloud a span{
     font-size:1em;
 	padding: 3px;
-}    
+}
+
+
+
 </style>
 <p>Welcome, {{ user.username }}!</p>
 <ul class="nav nav-tabs">
@@ -34,7 +37,9 @@ div#dynacloud a span{
 	{% if dac_user.is_power %}
 	<li><a href="{% url 'dac.uploader.views.manage_file' %}">Manage Files</a></li>
 	{% endif %}
-		
+	{% if dac_user.is_admin %}
+	<li><a href="{% url 'dac.uploader.views.admin' %}">Administration</a></li>
+	{% endif %}	
 	<li><a href="{% url 'djangocas.views.logout' %}">Log out</a></li>
 </ul>
 

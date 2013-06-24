@@ -199,3 +199,6 @@ def get_predefined_search_lists():
     
 def get_all_tags():
     return {'alltags':models.Asset.objects.get_all_tags()}
+
+def is_admin(username):
+    return username in ('nvi','mdj2','joel8')

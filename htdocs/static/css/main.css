@@ -43,3 +43,13 @@ table.tablesorter .tablesorter-headerDesc {
 	background-image: url(../img/desc.png);
 	background-repeat: no-repeat;
 }
+
+table{ table-layout:fixed; }
+
+table td 
+{
+  table-layout:fixed;
+  overflow:hidden;
+  word-wrap:break-word;
+  white-space:nowrap; 
+}

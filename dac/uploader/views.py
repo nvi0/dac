@@ -190,6 +190,9 @@ def edit_title(request):
 
 @login_required #TODO: admin only
 def admin(request):
+    if not is_admin(request.user.username):
+        return HttpResponseRedirect(URL_INDEX)
+        
 #    m = {'user_list': DacUser.objects.order_by('position')} # conveniently 'u' is after 'f' and 's'
     m = get_user_list(request)
     m.update({'dac_user':get_dac_user(request.user.username)})
@@ -197,6 +200,9 @@ def admin(request):
 
 @login_required #TODO: admin only
 def admin_edit_positions(request):
+    if not is_admin(request.user.username):
+        return HttpResponseRedirect(URL_INDEX)
+    
     if request.method != 'POST':
         return HttpResponseRedirect(URL_ADMIN)
     print request.POST
@@ -214,6 +220,8 @@ def admin_create_user(request):
     Handle ajax post.
     """
     if is_student(request.user.username):
+        return
+    if not is_admin(request.user.username):
         return
     if request.method != 'POST':
         return

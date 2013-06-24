@@ -82,6 +82,9 @@ class DacUser(models.Model):
         """
         return self.position == 'f' or self.position == 's'
     
+    def is_admin(self):
+        return helpers.is_admin(self.user.username)
+    
     def f_selected(self):
         return 'selected' if self.position == 'f' else ''
     def s_selected(self):
