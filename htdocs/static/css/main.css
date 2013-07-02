@@ -44,6 +44,7 @@ table.tablesorter .tablesorter-headerDesc {
 	background-repeat: no-repeat;
 }
 
+/*
 table{ table-layout:fixed; }
 
 table td 
@@ -53,3 +54,4 @@ table td
   word-wrap:break-word;
   white-space:nowrap; 
 }
+*/
