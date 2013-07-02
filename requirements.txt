@@ -2,3 +2,4 @@ Django==1.4.3
 MySQL-python==1.2.4
 wsgiref==0.1.2
 -e git://github.com/mdj2/djangocas@25b77b5b9fa58d8a3018f5eddb2485fb725e6f07#egg=djangocas-dev
+python-ldap==2.3.13
