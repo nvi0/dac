@@ -60,37 +60,75 @@ div#dynacloud a span{
 
 <script type="text/javascript">
 $(document).ready(function () {
-		
-	$("#fileTable")
-	.tablesorter()
-	.tablesorterPager({
-		container: $("#pager"),
-		positionFixed: false
-	})
-	.trigger('sorton', [
-	[
-	[5, 1],
-	]
-	]); //descending asset id
 
-	init_upload();
-	$('#id_tags').watermark('<space or comma separated>');
-	$('#id_title').watermark('<optional>');
-	$('#id_searchtext').watermark('search...');
+  $("#fileTable").tablesorter().tablesorterPager({
+    container: $("#pager"),
+    positionFixed: false
+  }).trigger('sorton', [
+    [
+      [5, 1], ]
+  ]); //descending asset id
+  init_upload();
+  $('#id_tags').watermark('<space or comma separated>');
+  $('#id_title').watermark('<optional>');
+  $('#id_searchtext').watermark('search...');
 
+  var currentTagLinks = $.makeArray($('.onetag'));
+  var currentTags = currentTagLinks.map(function (x) {
+    return x.innerHTML.replace("<span>", "").replace("</span>", "");
+  });
 
-
+  function split( val ) {
+    return val.split( /,\s*/ );
+  }
+  function extractLast( term ) {
+    return split( term ).pop();
+  }
+  $('#id_tags')
+  // don't navigate away from the field on tab when selecting an item
+  .bind("keydown", function (event) {
+    if (event.keyCode === $.ui.keyCode.TAB && $(this).data("ui-autocomplete").menu.active) {
+      event.preventDefault();
+    }
+  }).autocomplete({
+	minLength: 0,
+    source: function (request, response) {
+	  // delegate back to autocomplete, but extract the last term
+      var re = $.ui.autocomplete.escapeRegex(extractLast(request.term));
+      var matcher = new RegExp("^" + re, "i");
+      var a = $.grep(currentTags, function (item, index) {
+        return matcher.test(item);
+      });
+      response(a);
+    },
+    focus: function() {
+      // prevent value inserted on focus
+      return false;
+    },
+    select: function( event, ui ) {
+      var terms = split( this.value );
+      // remove the current input
+      terms.pop();
+      // add the selected item
+      terms.push( ui.item.value );
+      // add placeholder to get the comma-and-space at the end
+      terms.push( "" );
+      this.value = terms.join( ", " );
+      return false;
+    }
+  });
 });
-$(function() {
-	
-	$("#filters").click( function() {
-		$('#id_searchtype').show();
-		$('#id_searchowner').show();
-		$('#id_searchtag').show();
-		$(this).hide();
-		return false;
-	});
+$(function () {
+
+  $("#filters").click(function () {
+    $('#id_searchtype').show();
+    $('#id_searchowner').show();
+    $('#id_searchtag').show();
+    $(this).hide();
+    return false;
+  });
 });
+
 </script>
 {% comment %}
 tablesorterPager.defaults = {
