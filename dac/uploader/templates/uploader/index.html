@@ -78,11 +78,14 @@ $(document).ready(function () {
     return x.innerHTML.replace("<span>", "").replace("</span>", "");
   });
 
-  function split( val ) {
-    return val.split( /,\s*/ );
+  function getLastDelim(term) {
+  	var trimterm = term.replace(/(^\s*)|((,|\s)*$)/g, '');
+	return Math.max(trimterm.lastIndexOf(" "), trimterm.lastIndexOf(","));
   }
   function extractLast( term ) {
-    return split( term ).pop();
+    var trimterm = term.replace(/(^\s*)|((,|\s)*$)/g, '');
+    var i = Math.max(trimterm.lastIndexOf(" "), trimterm.lastIndexOf(","));
+    return trimterm.substring(i+1);
   }
   $('#id_tags')
   // don't navigate away from the field on tab when selecting an item
@@ -106,15 +109,9 @@ $(document).ready(function () {
       return false;
     },
     select: function( event, ui ) {
-      var terms = split( this.value );
-      // remove the current input
-      terms.pop();
-      // add the selected item
-      terms.push( ui.item.value );
-      // add placeholder to get the comma-and-space at the end
-      terms.push( "" );
-      this.value = terms.join( ", " );
-      return false;
+	  var term = this.value;
+	  this.value = term.substring(0,getLastDelim(term)+1).concat(ui.item.value, ", ");
+	  return false;
     }
   });
 });
