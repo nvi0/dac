@@ -139,7 +139,7 @@ jQuery.fn.dynaCloud = function(outElement) {
         var l = jQuery.dynaCloud.max == -1 ? cl.length: Math.min(jQuery.dynaCloud.max, cl.length);
 
         for (var i = 0; i < l;++i) {
-            out.append('<a href="/dac/?searchtext=&searchtype=&searchowner=&searchtag=' + cl[i].el + '" style="font-size: ' + Math.ceil((cl[i].count / max) * jQuery.dynaCloud.scale) + 'em"><span>' + cl[i].el + '</span></a> &nbsp; ');
+            out.append('<a class="onetag" href="/dac/?searchtext=&searchtype=&searchowner=&searchtag=' + cl[i].el + '" style="font-size: ' + Math.ceil((cl[i].count / max) * jQuery.dynaCloud.scale) + 'em"><span>' + cl[i].el + '</span></a> &nbsp; ');
         }
 
         var target = this;
