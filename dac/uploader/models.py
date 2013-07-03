@@ -176,8 +176,8 @@ class Asset(models.Model):
         self.keywords.clear()
         
         # set new keywords
-        delim = ',' if ',' in new_keywords else None  # split by either space or comma
-        tags = [tag.strip() for tag in new_keywords.split(delim)]
+        # split by either space or comma
+        tags = [tag.strip() for tag in new_keywords.replace(',',' ').split()]
         for tag in tags:
             keyword = Keyword.objects.filter(text=tag)
             if keyword:
